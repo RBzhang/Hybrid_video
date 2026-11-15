@@ -1,3 +1,11 @@
+# Rev.C 本地锁频移频源：中文完整设计文档
+
+**中文工程说明入口：** [Design_RevC_ZH.md](Design_RevC_ZH.md)
+
+这份中文文档整合了10.000–10.216 MHz Colpitts VCO、可调变容二极管、10 MHz数字整形、四级二分频、STM32U575本地门控测频、DAC低速锁频、供电和功耗预算、完整BOM、逐引脚连接表及实验验收计划，并引用下方6张SVG原理图。设计尚需SPICE、ERC和实测验证；2.4 GHz图像射频匹配网络不属于已完成范围。
+
+---
+
 # 10 MHz Tag-local FLL: Rev.C SVG electrical drawings
 
 **Status: draft electrical design for bench validation.** This is NOT an ERC-checked KiCad schematic or a PCB-ready RF design.
