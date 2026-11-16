@@ -1,107 +1,104 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" role="img" aria-label="STM32U575 PLL1 fractional MCO 10 MHz clock generation schematic">
-<rect width="1800" height="1080" fill="#ffffff"/>
-<rect width="1800" height="88" fill="#193a54"/>
-<text x="40" y="42" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="30" font-weight="700" fill="#ffffff">STM32U575 PLL1 分数频率合成与 RF Switch 驱动原理图</text>
-<text x="42" y="72" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#d7e7f2">IEC/ANSI 常用电气与逻辑符号 • HSE → PLL1_R → MCO/8 → 1.8 V buffer → ADG902 CTRL</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" role="img" aria-label="STM32U575 PLL1 MCO 10 MHz clock synthesis electrical schematic">
+<rect width="1800" height="1080" fill="#fff"/>
+<rect width="1800" height="92" fill="#193a54"/>
+<text x="40" y="43" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="30" font-weight="700" fill="#fff">STM32U575 PLL1 分数频率合成与 RF Switch 驱动原理图</text>
+<text x="42" y="73" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#d7e7f2">HSE晶体符号 + MCU内部PLL1 + MCO输出 + 1.8V逻辑缓冲 + ADG902 SPST</text>
 
-<!-- HSE crystal and load caps -->
-<rect x="45" y="132" width="435" height="420" rx="8" fill="#fbfdff" stroke="#bfd0dd" stroke-width="2"/>
-<text x="68" y="170" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="23" font-weight="700" fill="#254c68">A. 外部 16 MHz HSE 参考</text>
-<text x="78" y="221" font-family="Arial,sans-serif" font-size="19" fill="#203d55">PH0 / OSC_IN</text>
-<text x="78" y="407" font-family="Arial,sans-serif" font-size="19" fill="#203d55">PH1 / OSC_OUT</text>
-<path d="M78 250 H190 M78 380 H190" stroke="#203d55" stroke-width="2.8" fill="none"/>
-<!-- crystal IEC symbol -->
-<path d="M190 250 H230 M230 221 V279 M248 221 V279 M248 250 H288" stroke="#203d55" stroke-width="3" fill="none"/>
-<rect x="230" y="208" width="18" height="84" fill="none" stroke="#203d55" stroke-width="2"/>
-<path d="M288 250 V380 H248 M230 380 H190" stroke="#203d55" stroke-width="2.8" fill="none"/>
-<rect x="190" y="356" width="58" height="48" rx="3" fill="#fff" stroke="#203d55" stroke-width="2"/>
-<text x="219" y="386" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#203d55">X1</text>
-<text x="268" y="238" font-family="Arial,sans-serif" font-size="19" fill="#145b86" font-weight="700">16 MHz</text>
-<text x="268" y="264" font-family="Arial,sans-serif" font-size="16" fill="#536b7c">10–20 ppm 建议</text>
-<!-- Load caps -->
-<path d="M288 250 H345 V298 M345 352 V380 H288" stroke="#203d55" stroke-width="2.5" fill="none"/>
-<path d="M345 298 V311 M328 311 H362 M328 337 H362 M345 337 V352" stroke="#203d55" stroke-width="2.5" fill="none"/>
-<path d="M345 352 V430" stroke="#203d55" stroke-width="2.5" fill="none"/>
-<path d="M329 430 H361 M334 438 H356 M340 446 H350" stroke="#203d55" stroke-width="2.2" fill="none"/>
-<text x="369" y="323" font-family="Arial,sans-serif" font-size="17" fill="#203d55">CLOAD</text>
-<text x="369" y="346" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">按晶体 CL</text>
-<text x="75" y="486" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#8b5a21">注意：NUCLEO-U575ZI-Q C05 原理图将 X3/C59/C60 标为可选未装；</text>
-<text x="75" y="513" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#8b5a21">先确认实板。若未装，外接 16 MHz 时钟至 PH0（HSE bypass）。</text>
+<!-- HSE crystal circuit -->
+<rect x="40" y="120" width="470" height="475" rx="8" fill="#fbfdff" stroke="#bfd0dd" stroke-width="2"/>
+<text x="64" y="158" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="22" font-weight="700" fill="#254c68">A. 外部HSE参考电路</text>
+<text x="70" y="222" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PH0 / OSC_IN</text>
+<text x="70" y="454" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PH1 / OSC_OUT</text>
+<!-- horizontal crystal path -->
+<path d="M70 260 H215 M285 260 H445 V420 H285 M215 420 H70" fill="none" stroke="#203d55" stroke-width="2.8"/>
+<!-- crystal symbol between 215 and 285 -->
+<path d="M215 260 H228 M228 230 V290 M272 230 V290 M272 260 H285" fill="none" stroke="#203d55" stroke-width="3"/>
+<rect x="236" y="225" width="28" height="70" fill="none" stroke="#203d55" stroke-width="2.4"/>
+<text x="250" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#145b86">X1 16 MHz</text>
+<!-- C1 from PH0 to ground -->
+<path d="M145 260 V334 M123 334 H167 M123 360 H167 M145 360 V404" fill="none" stroke="#203d55" stroke-width="2.6"/>
+<path d="M129 404 H161 M135 412 H155 M141 420 H149" fill="none" stroke="#203d55" stroke-width="2.2"/>
+<text x="90" y="354" font-family="Arial,sans-serif" font-size="17" fill="#203d55">C1</text>
+<!-- C2 from PH1 to ground -->
+<path d="M365 420 V334 M343 334 H387 M343 360 H387 M365 360 V404" fill="none" stroke="#203d55" stroke-width="2.6"/>
+<path d="M349 404 H381 M355 412 H375 M361 420 H369" fill="none" stroke="#203d55" stroke-width="2.2"/>
+<text x="395" y="354" font-family="Arial,sans-serif" font-size="17" fill="#203d55">C2</text>
+<text x="70" y="505" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#536b7c">C1/C2按晶体CL与PCB寄生计算，不能固定照抄某个电容值。</text>
+<rect x="66" y="525" width="420" height="52" rx="4" fill="#fff5e5" stroke="#e2c58f"/>
+<text x="80" y="548" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#89551f">NUCLEO-U575ZI-Q C05：X3/C59/C60可选未装。</text>
+<text x="80" y="568" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#89551f">实验可用ST-LINK MCO 5MHz（R5+SB48，HSE bypass）。</text>
 
-<!-- MCU block -->
-<rect x="540" y="132" width="650" height="625" rx="8" fill="#f8fbfd" stroke="#7795aa" stroke-width="2.2"/>
-<text x="575" y="174" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="25" font-weight="700" fill="#214c6b">U1 — STM32U575</text>
-<text x="575" y="211" font-family="Arial,sans-serif" font-size="18" fill="#405e73">PH0 / HSE_IN</text>
-<path d="M480 250 H540" stroke="#203d55" stroke-width="2.8" fill="none"/>
-<text x="575" y="251" font-family="Arial,sans-serif" font-size="17" fill="#405e73">HSE = 16 MHz</text>
-<rect x="620" y="276" width="480" height="250" rx="5" fill="#e8f2f9" stroke="#4c7897" stroke-width="2"/>
-<text x="650" y="316" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="23" font-weight="700" fill="#1c4e70">内部 PLL1（分数 N）</text>
-<text x="650" y="360" font-family="Arial,sans-serif" font-size="19" fill="#203d55">M = 1   N = 10   R = 2</text>
-<text x="650" y="400" font-family="Arial,sans-serif" font-size="19" fill="#203d55">FRACN = 0…1769（Tag 0…9）</text>
-<text x="650" y="444" font-family="Arial,sans-serif" font-size="18" fill="#203d55">fVCO = 160…163.455 MHz</text>
-<text x="650" y="480" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PLL1_R = 80…81.728 MHz</text>
-<path d="M1100 400 H1152 V583 H1190" stroke="#203d55" stroke-width="2.8" fill="none"/>
-<text x="575" y="584" font-family="Arial,sans-serif" font-size="18" fill="#203d55">SYSCLK = PLL1_R（HCLK /1，约 80…81.728 MHz）</text>
-<text x="575" y="620" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#8b5a21">VOS Range 2；HCLK ≤110 MHz。PLL1_P/Q 输出关闭，仅启用 R。</text>
-<text x="575" y="653" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#536b7c">MCO1 选择 PLL1_R / PLLCLK，预分频 /8。</text>
-<text x="575" y="704" font-family="Arial,sans-serif" font-size="18" fill="#145b86" font-weight="700">PA8 / AF0 = MCO1</text>
+<!-- MCU -->
+<rect x="550" y="120" width="610" height="640" rx="8" fill="#f8fbfd" stroke="#7795aa" stroke-width="2.2"/>
+<text x="580" y="162" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="25" font-weight="700" fill="#214c6b">U1 — STM32U575</text>
+<text x="580" y="220" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PH0 / HSE_IN</text>
+<text x="580" y="455" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PH1 / HSE_OUT</text>
+<path d="M510 260 H550 M510 420 H550" stroke="#203d55" stroke-width="2.8" fill="none"/>
+<rect x="630" y="270" width="450" height="260" rx="5" fill="#e8f2f9" stroke="#4c7897" stroke-width="2"/>
+<text x="658" y="310" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="23" font-weight="700" fill="#1c4e70">内部 PLL1（fractional-N）</text>
+<text x="658" y="355" font-family="Arial,sans-serif" font-size="19" fill="#203d55">M = 1   N = 10   R = 2</text>
+<text x="658" y="395" font-family="Arial,sans-serif" font-size="19" fill="#203d55">FRACN = 0…1769（16 MHz HSE）</text>
+<text x="658" y="440" font-family="Arial,sans-serif" font-size="18" fill="#203d55">VCO = 160…163.455 MHz</text>
+<text x="658" y="478" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PLL1_R = SYSCLK = 80…81.728 MHz</text>
+<text x="580" y="590" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#8b5a21">VOS Range 2；HCLK ≤110 MHz。P/Q关闭，仅启用R输出。</text>
+<text x="580" y="628" font-family="Arial,sans-serif" font-size="18" fill="#145b86" font-weight="700">PA8 / AF0 = MCO1</text>
+<text x="580" y="662" font-family="Arial,sans-serif" font-size="17" fill="#536b7c">MCO source = PLLCLK（PLL1_R），prescaler = /8</text>
+<text x="580" y="705" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#536b7c">CPU主频随Tag变化：80.000～81.728 MHz，需重算定时器。</text>
 
-<!-- MCO line -->
-<path d="M1190 583 H1280" stroke="#203d55" stroke-width="3" fill="none"/>
-<circle cx="1280" cy="583" r="5" fill="#203d55"/>
-<text x="1212" y="553" font-family="Arial,sans-serif" font-size="17" fill="#145b86" font-weight="700">MCO /8</text>
-<text x="1210" y="615" font-family="Arial,sans-serif" font-size="17" fill="#203d55">PA8  10.000–10.216 MHz</text>
+<!-- MCO path -->
+<path d="M1160 628 H1245" fill="none" stroke="#203d55" stroke-width="2.8"/>
+<circle cx="1245" cy="628" r="5" fill="#203d55"/>
+<text x="1167" y="595" font-family="Arial,sans-serif" font-size="17" fill="#145b86" font-weight="700">PA8 MCO /8</text>
+<text x="1170" y="658" font-family="Arial,sans-serif" font-size="17" fill="#203d55">10.000–10.216 MHz</text>
 
-<!-- Buffer -->
-<rect x="1300" y="478" width="230" height="210" rx="8" fill="#f9fcff" stroke="#a9c1d2" stroke-width="2"/>
-<text x="1317" y="511" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="18" font-weight="700" fill="#244d69">U2 74AUP1G17</text>
-<path d="M1327 583 H1360 L1440 535 V631 L1360 583 Z" fill="#ffffff" stroke="#203d55" stroke-width="2.8"/>
-<path d="M1440 583 H1495" stroke="#203d55" stroke-width="2.8"/>
-<text x="1374" y="590" font-family="Arial,sans-serif" font-size="18" fill="#20435e" font-weight="700">A→Y</text>
-<text x="1320" y="661" font-family="Arial,sans-serif" font-size="16" fill="#536b7c">VCC=1.8 V；输入耐受3.6 V</text>
-<text x="1320" y="682" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">TSSOP5: 2=A, 4=Y, 3=GND, 5=VCC</text>
-<path d="M1280 583 H1327" stroke="#203d55" stroke-width="2.8"/>
-<!-- resistor -->
-<path d="M1495 583 H1520" stroke="#203d55" stroke-width="2.8"/>
-<rect x="1520" y="570" width="75" height="26" fill="#fff" stroke="#203d55" stroke-width="2"/>
-<path d="M1595 583 H1640" stroke="#203d55" stroke-width="2.8"/>
-<text x="1558" y="554" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" fill="#203d55">R1 22–33Ω</text>
-<text x="1615" y="615" font-family="Arial,sans-serif" font-size="16" fill="#145b86" font-weight="700">1.8V CLK</text>
+<!-- buffer -->
+<rect x="1260" y="520" width="230" height="220" rx="8" fill="#f9fcff" stroke="#a9c1d2" stroke-width="2"/>
+<text x="1277" y="552" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="18" font-weight="700" fill="#244d69">U2 74AUP1G17</text>
+<path d="M1282 628 H1320 L1405 575 V681 L1320 628 Z" fill="#fff" stroke="#203d55" stroke-width="2.8"/>
+<path d="M1405 628 H1460" stroke="#203d55" stroke-width="2.8"/>
+<text x="1344" y="634" font-family="Arial,sans-serif" font-size="18" fill="#20435e" font-weight="700">A→Y</text>
+<text x="1277" y="710" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">VCC=1.8V，输入耐受3.6V</text>
+<path d="M1245 628 H1282" stroke="#203d55" stroke-width="2.8"/>
+
+<!-- series resistor -->
+<path d="M1460 628 H1500" stroke="#203d55" stroke-width="2.8"/>
+<rect x="1500" y="615" width="76" height="26" fill="#fff" stroke="#203d55" stroke-width="2"/>
+<path d="M1576 628 H1620" stroke="#203d55" stroke-width="2.8"/>
+<text x="1538" y="598" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" fill="#203d55">R1 22–33Ω</text>
+<text x="1588" y="662" font-family="Arial,sans-serif" font-size="15" fill="#145b86">1.8V CLK</text>
+
 <!-- ADG902 -->
-<rect x="1640" y="445" width="140" height="270" rx="6" fill="#f8fbfd" stroke="#557b96" stroke-width="2"/>
-<text x="1655" y="481" font-family="Arial,sans-serif" font-size="19" fill="#184b6a" font-weight="700">U3</text>
-<text x="1655" y="508" font-family="Arial,sans-serif" font-size="17" fill="#184b6a">ADG902</text>
-<text x="1655" y="538" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">Pin 1 VDD=1V8</text>
-<text x="1655" y="563" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">Pin 2 CTRL</text>
-<path d="M1640 583 H1650" stroke="#203d55" stroke-width="2.8"/>
-<text x="1655" y="613" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">Pin 3,5,6,7 GND</text>
-<text x="1655" y="642" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">Pin 4 RF1 / Pin 8 RF2</text>
-<path d="M1670 682 H1745" stroke="#203d55" stroke-width="2.8"/>
-<circle cx="1682" cy="682" r="5" fill="#fff" stroke="#203d55" stroke-width="2"/>
-<circle cx="1733" cy="682" r="5" fill="#fff" stroke="#203d55" stroke-width="2"/>
-<path d="M1687 678 L1725 658" stroke="#203d55" stroke-width="2.8"/>
-<text x="1705" y="738" text-anchor="middle" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#536b7c">RF匹配另行设计</text>
+<rect x="1620" y="480" width="145" height="300" rx="6" fill="#f8fbfd" stroke="#557b96" stroke-width="2"/>
+<text x="1637" y="516" font-family="Arial,sans-serif" font-size="20" fill="#184b6a" font-weight="700">U3 ADG902</text>
+<text x="1637" y="552" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">1 VDD = 1V8</text>
+<text x="1637" y="579" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">2 CTRL</text>
+<text x="1637" y="606" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">3,5,6,7 GND</text>
+<text x="1637" y="633" font-family="Arial,sans-serif" font-size="15" fill="#536b7c">4 RF1 / 8 RF2</text>
+<path d="M1642 700 H1739" stroke="#203d55" stroke-width="2.8"/>
+<circle cx="1652" cy="700" r="5" fill="#fff" stroke="#203d55" stroke-width="2"/>
+<circle cx="1729" cy="700" r="5" fill="#fff" stroke="#203d55" stroke-width="2"/>
+<path d="M1657 696 L1719 672" stroke="#203d55" stroke-width="2.8"/>
+<text x="1692" y="746" text-anchor="middle" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#536b7c">RF匹配另行设计</text>
 
-<!-- image DAC -->
-<rect x="55" y="792" width="810" height="210" rx="8" fill="#f7fbf8" stroke="#b9d7c7" stroke-width="2"/>
-<text x="80" y="830" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="22" font-weight="700" fill="#2b6c50">独立的模拟图像通道（保持原方案）</text>
-<text x="85" y="877" font-family="Arial,sans-serif" font-size="19" fill="#244b3c">STM32 PA5 / DAC1_OUT2</text>
-<path d="M335 870 H410" stroke="#244b3c" stroke-width="2.8"/>
-<rect x="410" y="842" width="180" height="56" rx="4" fill="#fff" stroke="#57836c" stroke-width="2"/>
-<text x="500" y="877" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#244b3c">滤波 / 偏置</text>
-<path d="M590 870 H670" stroke="#244b3c" stroke-width="2.8"/>
-<rect x="670" y="842" width="155" height="56" rx="4" fill="#fff" stroke="#57836c" stroke-width="2"/>
-<text x="747" y="877" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#244b3c">图像 Varactor D2</text>
-<text x="85" y="941" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#4d705f">PA5只负责图像电压，不参与PLL频率设置；D2与频率合成无关。</text>
+<!-- Image DAC -->
+<rect x="50" y="790" width="800" height="205" rx="8" fill="#f7fbf8" stroke="#b9d7c7" stroke-width="2"/>
+<text x="76" y="830" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="22" font-weight="700" fill="#2b6c50">独立模拟图像通道（保持原方案）</text>
+<text x="82" y="875" font-family="Arial,sans-serif" font-size="19" fill="#244b3c">STM32 PA5 / DAC1_OUT2</text>
+<path d="M335 868 H410" stroke="#244b3c" stroke-width="2.8"/>
+<rect x="410" y="840" width="170" height="56" rx="4" fill="#fff" stroke="#57836c" stroke-width="2"/>
+<text x="495" y="875" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#244b3c">滤波 / 偏置</text>
+<path d="M580 868 H660" stroke="#244b3c" stroke-width="2.8"/>
+<rect x="660" y="840" width="165" height="56" rx="4" fill="#fff" stroke="#57836c" stroke-width="2"/>
+<text x="742" y="875" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#244b3c">图像Varactor D2</text>
+<text x="82" y="940" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#4d705f">PA5只负责图像电压；D2与PLL频率合成独立。</text>
 
-<!-- notes -->
-<rect x="920" y="792" width="860" height="210" rx="8" fill="#fff9ec" stroke="#e7cb93" stroke-width="2"/>
-<text x="948" y="832" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="22" font-weight="700" fill="#87551e">设计要点</text>
-<text x="950" y="875" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">1. MCO为3.3V时，ADG902 CTRL不能直接接入（CTRL不得超过VDD）。</text>
-<text x="950" y="909" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">2. U2以1.8V供电，输入耐受3.6V，输出1.8V逻辑给ADG902。</text>
-<text x="950" y="943" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">3. 若MCU VDD与ADG902均为1.8V且所有外设兼容，可评估省略U2。</text>
-<text x="950" y="977" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">4. PLL锁定后再启动CW；测量分数杂散、相噪和邻道泄漏。</text>
+<!-- Notes -->
+<rect x="900" y="810" width="865" height="185" rx="8" fill="#fff9ec" stroke="#e7cb93" stroke-width="2"/>
+<text x="928" y="848" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="22" font-weight="700" fill="#87551e">设计要点</text>
+<text x="930" y="888" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">1. 3.3V PA8不能直接连接1.8V供电的ADG902 CTRL。</text>
+<text x="930" y="923" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">2. U2输入耐受3.6V，输出1.8V；若MCU I/O也为1.8V可评估直连。</text>
+<text x="930" y="958" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#6b5637">3. PLL锁定后再启CW；实测分数杂散、24kHz邻道相噪和OBW。</text>
 <path d="M40 1030 H1760" stroke="#9eb2c0" stroke-width="1.5"/>
-<text x="45" y="1058" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#657c8b">Conceptual electrical drawing. Confirm exact package, board jumpers, clock tree, RF layout, PLL spur and image-link performance before PCB release.</text>
+<text x="45" y="1058" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#657c8b">Electrical concept. Verify HSE source, VOS/flash latency, PA8 pin, logic levels, fractional spurs and RF matching before PCB release.</text>
 </svg>
