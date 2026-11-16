@@ -27,7 +27,7 @@
 <text x="70" y="505" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#536b7c">C1/C2按晶体CL与PCB寄生计算，不能固定照抄某个电容值。</text>
 <rect x="66" y="525" width="420" height="52" rx="4" fill="#fff5e5" stroke="#e2c58f"/>
 <text x="80" y="548" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#89551f">NUCLEO-U575ZI-Q C05：X3/C59/C60可选未装。</text>
-<text x="80" y="568" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#89551f">实验可用ST-LINK MCO 5MHz（R5+SB48，HSE bypass）。</text>
+<text x="80" y="568" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" fill="#89551f">实验可用ST-LINK MCO 8MHz（V3E默认）或5MHz配置；先测PH0。</text>
 
 <!-- MCU -->
 <rect x="550" y="120" width="610" height="640" rx="8" fill="#f8fbfd" stroke="#7795aa" stroke-width="2.2"/>
