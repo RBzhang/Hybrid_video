@@ -1,3 +1,11 @@
+## 移频产生核心逻辑（简明版，标准电路符号）
+
+- **[简明中文说明与两张IEC风格电路图](Core_Shift_Logic_ZH.md)**
+- [Colpitts VCO与调谐变容二极管：电气原理图SVG](schematics/06_iec_colpitts_vco.svg)
+- [分频测频、Tag本地FLL及RF开关：电气原理图SVG](schematics/07_iec_fll_rf_switch.svg)
+
+---
+
 # Rev.C 本地锁频移频源：中文完整设计文档
 
 **中文工程说明入口：** [Design_RevC_ZH.md](Design_RevC_ZH.md)
