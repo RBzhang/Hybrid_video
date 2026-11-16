@@ -1,475 +1,528 @@
-# STM32U575 内部 PLL1 分数频率合成 10 MHz 移频时钟设计说明
+# STM32U575 PLL1 分数频率合成与 MCO 移频时钟：详细设计说明
 
-> **版本：** PLL1-MCO Rev.A（详细设计草案）  
-> **目标平台：** STM32U575 / NUCLEO-U575ZI-Q  
-> **目标：** 每个 Tag 直接输出 10.000 MHz～10.216 MHz 时钟，按 24 kHz 递增，驱动 ADG902 反射开关。  
-> **推荐架构：** 外部 HSE 晶体 → STM32U575 PLL1 fractional-N → PLL1_R → MCO /8 → 电平适配 → ADG902 CTRL。  
-> **重要：** 本方案取消外置 LC VCO、VCO 调谐 DAC、÷16 分频器和 Tag 本地 FLL。PLL 内部仍有锁相反馈，但不再需要外部测频反馈。频率稳定性取决于 HSE 和 PLL 的实际相位噪声/杂散。
+> **版本：** PLL1-MCO Rev.B（工程设计与验证版）  
+> **日期：** 2026-11-16  
+> **平台：** STM32U575ZIT6Q / NUCLEO-U575ZI-Q  
+> **用途：** 多节点模拟图像反散射的移频时钟产生  
+> **目标：** 每个 Tag 输出 10.000 MHz～10.216 MHz 时钟，相邻节点间隔 24 kHz  
+> **核心架构：** 16 MHz HSE → STM32U575 PLL1 fractional-N → PLL1_R → MCO /8 → 1.8 V逻辑缓冲 → ADG902 CTRL
 
-## 1. 设计结论与范围
+> **重要状态声明：** 本文是基于 ST 官方数据手册、参考手册和 NUCLEO 用户手册整理的工程设计方案。频率公式和 FRACN 表为理论计算值；尚未在实物板上验证 MCO 频谱、分数杂散、24 kHz 邻道性能和完整图像链路。不得把计算表视为实测结果或量产保证。
+
+## 0. 方案结论
+
+原来的外部 LC VCO + 变容调谐 + ÷16 测频 + STM32 DAC 反馈方案，对当前 STM32U575 平台而言过于复杂。STM32U575 自带支持 13 bit FRACN 的 PLL1，可以直接合成 10 MHz 附近的可编程时钟，再从 MCO 引脚输出。
+
+本方案采用：
+
+- HSE：16 MHz 外部晶体；
+- PLL1 输入分频 M=2，PLL1 倍频 N=20，PLL1_R 分频 R=2；
+- FRACN：按 Tag ID 配置；
+- PLL1_R：80.000 MHz～81.728 MHz；
+- MCO：PLL1_R /8，得到 10.000 MHz～10.216 MHz；
+- PA8 / AF0：MCO 输出；
+- 74AUP1G17：将 3.3 V MCO 转为 1.8 V逻辑；
+- ADG902：由 1.8 V时钟驱动射频反射开关。
+
+**取消的外部硬件：** LC VCO、调谐变容管 D1、VCO 缓冲放大器、÷16 分频器、额外电平转换器、测频定时器支路和 DAC 频率反馈。  
+**保留的原系统硬件：** STM32U575、模拟图像 DAC（PA5）、图像调制变容二极管 D2、ADG902、CW 激励源和图像接收链路。
+
+这里取消的是 Tag 外部频率测量与反馈环（FLL），不是 PLL 内部锁相环。PLL 仍然依赖 HSE 参考时钟自动锁定。
+
+## 1. 系统功能边界
 
 ![PLL1-MCO移频时钟原理图](schematics/01_pll1_mco_shift.svg)
 
-STM32U575 内部 PLL1 支持 13 bit FRACN 分数配置。通过改变 FRACN，可以改变 PLL1_R 输出频率；再使用 MCO 的 /8 预分频，直接获得 10.xxx MHz 的方波时钟。该时钟经电平适配后驱动 ADG902 CTRL，外部 CW 经 Tag 的周期性反射阻抗切换后产生对应频移分量。
+本设计只负责生成 RF Switch 的低频控制时钟。它不直接产生 2.4 GHz RF 载波，也不替代图像模拟调制链路。
 
-本方案的关键优点：
+- PA8 输出 10.xxx MHz 方波，控制 ADG902 的 CTRL。
+- ADG902 周期性切换射频反射状态，使外部 CW 激励在反射频谱中出现相对载波的频移分量。
+- PA5/DAC1_OUT2 继续输出图像模拟电压，驱动独立的图像变容二极管 D2。
+- D2 的 2.4 GHz 偏置、匹配网络、天线和反射系数映射仍需单独设计。
 
-1. 不需要外置 10 MHz LC 振荡器、变容调谐网络和专用 PLL 芯片。
-2. 不需要 FPGA 80 MHz NCO，也不需要 10 MHz 与 24 kHz 方波 AND。
-3. 不需要 Tag 内部额外计数器、÷16 触发器和 DAC 频率反馈闭环。
-4. 每个 Tag 只需根据自身 ID 设置一次 FRACN；PLL 锁定后持续输出。
-5. STM32 的 PA5 图像 DAC 和图像变容二极管 D2 完全保留，和 PLL 频率设置独立。
+方波控制会带来基波及高次谐波对应的反射频谱分量。允许存在镜频不等于可以忽略高次谐波和邻道杂散；仍需通过 RF 实测判断是否影响 24 kHz 间隔的 FDMA。
 
-本文件仅设计**移频时钟合成及其到 RF Switch 的接口**，不包含 D2 的 2.4 GHz 匹配、变容偏置网络和天线匹配。这些仍需独立的 RF 设计和实测。
+## 2. PLL1 分数频率合成原理
 
-## 2. PLL1 与 MCO 的频率关系
+### 2.1 PLL 频率关系
 
-### 2.1 PLL1 基本关系
-
-令 HSE 输入频率为 \(f_{\rm HSE}\)，PLL1 分频/倍频参数为 M、N、R，分数系数为 FRACN，则
+STM32U575 的 PLL1 使用参考时钟、输入分频器 M、整数倍频 N、13 bit 分数项 FRACN 和输出分频器 R。计算关系为：
 
 $$
-f_{\rm VCO}=\frac{f_{\rm HSE}}{M}
-\left(N+\frac{\rm FRACN}{8192}\right)
-$$
-
-PLL1_R 输出为
-
-$$
-f_{\rm PLL1\_R}=\frac{f_{\rm VCO}}{R}.
-$$
-
-本方案选择 MCO 时钟源为 PLL1 主时钟输出（PLL1_R / PLLCLK），MCO 分频为 8：
-
-$$
-f_{\rm MCO}=\frac{f_{\rm HSE}}{M R \cdot 8}
-\left(N+\frac{\rm FRACN}{8192}\right).
-$$
-
-### 2.2 推荐配置
-
-使用 16 MHz 外部 HSE 参考：
-
-| 参数 | 配置 |
-|---|---:|
-| HSE | 16 MHz |
-| PLL1M | 1 |
-| PLL1N | 10 |
-| PLL1R | 2 |
-| PLL1FRACN | 0～1769（本系统10个节点） |
-| PLL1 输入频率范围 | 8～16 MHz |
-| PLL1 EPOD/MBOOST 预分频 | DIV1（16 MHz输入） |
-| PLL1_R 输出使能 | 开启 |
-| PLL1_P、PLL1_Q 输出 | 关闭 |
-| MCO 源 | PLLCLK（PLL1_R） |
-| MCO 分频 | /8 |
-| MCO 引脚 | PA8 / AF0 |
-| VOS | Range 2（HCLK不超过110 MHz） |
-
-代入得到：
-
-$$
-f_{\rm VCO}=160\ {\rm MHz}
-+1953.125\cdot{\rm FRACN}\ {\rm Hz}
+f_{\mathrm{PLL1,in}}=\frac{f_{\mathrm{HSE}}}{M}
 $$
 
 $$
-f_{\rm PLL1\_R}=80\ {\rm MHz}
-+976.5625\cdot{\rm FRACN}\ {\rm Hz}
+f_{\mathrm{VCO}}=f_{\mathrm{PLL1,in}}
+\left(N+\frac{\mathrm{FRACN}}{8192}\right)
 $$
 
 $$
-\boxed{
-f_{\rm MCO}=10\ {\rm MHz}
-+122.0703125\cdot{\rm FRACN}\ {\rm Hz}
-}
+f_{\mathrm{PLL1\_R}}=\frac{f_{\mathrm{VCO}}}{R}
 $$
 
-因此 MCO 频率设置分辨率为
+MCO 选择 PLL1 主 PLL 时钟（PLL1_R / PLLCLK）并进行 8 分频：
 
 $$
-\Delta f_{\rm MCO}=\frac{16\ {\rm MHz}}{1\cdot2\cdot8\cdot8192}
-=122.0703125\ {\rm Hz}.
+f_{\mathrm{MCO}}=\frac{f_{\mathrm{HSE}}}
+{M\cdot R\cdot 8}
+\left(N+\frac{\mathrm{FRACN}}{8192}\right)
 $$
 
-FRACN 为 13 bit，合法范围 0～8191。本方案的最高节点只需 FRACN=1769，远未达到上限。
-
-### 2.3 10个Tag的FRACN配置表
-
-目标频率为
+FRACN 的合法范围为 0～8191。FRACN 每增加 1，MCO 频率变化：
 
 $$
-f_i^*=10\ {\rm MHz}+i\cdot24\ {\rm kHz},\quad i=0,\ldots,9.
+\Delta f_{\mathrm{MCO}}=
+\frac{f_{\mathrm{HSE}}}{M\cdot R\cdot 8\cdot8192}
 $$
 
-计算规则：
+### 2.2 推荐的最终配置
+
+选择 16 MHz HSE，并令 PLL1 输入经过 /2，得到 8 MHz PLL 输入：
+
+| 参数 | 配置 | 说明 |
+|---|---:|---|
+| HSE | 16 MHz | 外部晶体参考 |
+| PLL1 source | HSE | 不使用 HSI/MSI 作为最终精度参考 |
+| PLL1M | 2 | 16 MHz /2 = 8 MHz |
+| PLL1N | 20 | 整数倍频 |
+| PLL1R | 2 | VCO 输出 /2 |
+| PLL1FRACN | 0～3539 | Tag ID 对应 |
+| PLL1 输入频率范围 | 8～16 MHz 档 | PLL 输入为 8 MHz，位于该档下边界 |
+| PLL1_R 输出 | Enable | 只需要 R 输出 |
+| PLL1_P / PLL1_Q | Disable | 本方案不使用 |
+| MCO source | PLLCLK（PLL1_R） | RCC MCO 选择主 PLL 输出 |
+| MCO prescaler | /8 | 输出 10.xxx MHz |
+| MCO pin | PA8 / AF0 | STM32U575 引脚复用表确认 |
+
+代入参数：
 
 $$
-{\rm FRACN}_i=
-{\rm round}\left(
-\frac{f_i^*-10\ {\rm MHz}}{122.0703125\ {\rm Hz}}
-\right).
+f_{\mathrm{PLL1,in}}=16/2=8\ \mathrm{MHz}
 $$
 
-| Tag ID | FRACN | 实际 MCO 频率 (MHz) | 相对目标误差 (Hz) |
+$$
+f_{\mathrm{VCO}}=8\ \mathrm{MHz}
+\left(20+\frac{\mathrm{FRACN}}{8192}\right)
+$$
+
+$$
+f_{\mathrm{PLL1\_R}}=80\ \mathrm{MHz}
++488.28125\cdot\mathrm{FRACN}\ \mathrm{Hz}
+$$
+
+$$
+\boxed{f_{\mathrm{MCO}}=
+10\ \mathrm{MHz}
++61.03515625\cdot\mathrm{FRACN}\ \mathrm{Hz}}
+$$
+
+因此，MCO 的理论设置步进约为 61.035 Hz。
+
+本配置的 PLL1 VCO 范围为 160.000～163.456 MHz，PLL1_R 范围为 80.000～81.728 MHz。VCO 处于 STM32U575 数据手册允许范围内；PLL1_R 输出和 HCLK 均低于 Voltage Scaling Range 2 的 110 MHz 上限。建议使用 VOS Range 2，并按实际 VDD/HCLK 配置 Flash latency。
+
+### 2.3 为什么选 M=2、N=20，而不是 M=1、N=10
+
+两种配置在 HSE=16 MHz、R=2、MCO /8 时都能生成相同的 10 MHz 中心频率和 160 MHz VCO：
+
+- M=1、N=10：PLL 输入 16 MHz，MCO 频率步进约 122.070 Hz；
+- M=2、N=20：PLL 输入 8 MHz，MCO 频率步进约 61.035 Hz。
+
+本方案选择 M=2、N=20，原因是输入参考频率降到 8 MHz，且频率设置分辨率提高一倍。8 MHz PLL 输入符合数据手册 4～16 MHz 的输入范围；RGE 选择 8～16 MHz 档。
+
+更高的 FRACN 分辨率只改善频率量化误差，不会自动改善 HSE 精度、PLL 相位噪声或分数杂散。
+
+## 3. 10 个 Tag 的频率配置
+
+目标频率：
+
+$$
+f_i^*=10\ \mathrm{MHz}+i\cdot24\ \mathrm{kHz},
+\quad i=0,\ldots,9
+$$
+
+FRACN 取整公式：
+
+$$
+\mathrm{FRACN}_i=
+\operatorname{round}
+\left(
+\frac{f_i^*-10\ \mathrm{MHz}}
+{61.03515625\ \mathrm{Hz}}
+\right)
+$$
+
+| Tag ID | FRACN | 理论 MCO 频率 (MHz) | 量化误差 (Hz) |
 |---:|---:|---:|---:|
 | 0 | 0 | 10.000000000 | 0.0 |
-| 1 | 197 | 10.024047852 | +47.9 |
-| 2 | 393 | 10.047973633 | −26.4 |
-| 3 | 590 | 10.072021484 | +21.5 |
-| 4 | 786 | 10.095947266 | −52.7 |
-| 5 | 983 | 10.119995117 | −4.9 |
-| 6 | 1180 | 10.144042969 | +43.0 |
-| 7 | 1376 | 10.167968750 | −31.3 |
-| 8 | 1573 | 10.192016602 | +16.6 |
-| 9 | 1769 | 10.215942383 | −57.6 |
+| 1 | 393 | 10.023986816 | -13.2 |
+| 2 | 786 | 10.047973633 | -26.4 |
+| 3 | 1180 | 10.072021484 | +21.5 |
+| 4 | 1573 | 10.096008301 | +8.3 |
+| 5 | 1966 | 10.119995117 | -4.9 |
+| 6 | 2359 | 10.143981934 | -18.1 |
+| 7 | 2753 | 10.168029785 | +29.8 |
+| 8 | 3146 | 10.192016602 | +16.6 |
+| 9 | 3539 | 10.216003418 | +3.4 |
 
-上述频率表假设 HSE 恰好为 16.000000 MHz。实际输出频率会随每块板的 HSE 频率同比例变化；FRACN 量化误差并不等于晶体绝对频率误差。
+最大量化误差约 30.5 Hz，远小于 24 kHz 的信道间隔。完整表格也在 [tag_frequency_table.csv](tag_frequency_table.csv)。
 
-## 3. PLL、CPU 与 MCO 时钟树的关系
+**表格前提：** HSE 标称为精确 16.000000 MHz。实际 MCO 频率会按 HSE 的实际频差同比例变化。FRACN 量化误差不是晶体的绝对频率误差。
 
-本推荐配置下：
+## 4. 时钟树与 CPU 频率影响
 
-- PLL1 VCO：160.000～163.455 MHz；
-- PLL1_R：80.000～81.728 MHz；
-- SYSCLK 选择 PLL1_R；
-- AHB prescaler = 1；
-- HCLK = SYSCLK = 80.000～81.728 MHz；
-- MCO = PLL1_R / 8 = 10.000～10.216 MHz。
+推荐将 PLL1_R 同时用作 SYSCLK 和 MCO 源，AHB prescaler = /1，APB prescaler 按需要设置。这样可避免额外启用第二个 PLL：
 
-STM32U575 的系统时钟最高可到 160 MHz；本配置下 HCLK 不超过 81.728 MHz，建议采用 VOS Range 2（该电压范围的 HCLK 上限为 110 MHz）。PLL1 的 VCO 频率和 PLL1_R 输出频率必须分别按数据手册约束检查；本方案 VCO 约160～163.5MHz、R输出约80～81.7MHz。
+| 时钟节点 | 频率范围 |
+|---|---:|
+| HSE | 16 MHz |
+| PLL1 输入 | 8 MHz |
+| PLL1 VCO | 160.000～163.456 MHz |
+| PLL1_R | 80.000～81.728 MHz |
+| SYSCLK（推荐共享） | 80.000～81.728 MHz |
+| HCLK（AHB /1） | 80.000～81.728 MHz |
+| MCO（PLL1_R /8） | 10.000～10.216 MHz |
 
-**重要的性能取舍：** 如果把 PLL1_R 同时作为 SYSCLK，MCU 核心频率将随 Tag 频点从 80MHz 变化到约81.728MHz。这低于 NUCLEO 默认常见的160MHz配置。对 320×240、1 FPS 的 DCMI+DMA、25.6～100 kSa/s DAC 和65-tap FIR，80MHz可能足够，但必须在实际固件中测量 CPU 占用和最坏执行时间，不能仅凭理论假设。
+这意味着 CPU 主频会随 Tag 频点变化，而不是固定 80 MHz。80～81.728 MHz 低于 Range 2 的 110 MHz HCLK 上限。
 
-如果系统不能接受约80MHz CPU，则此单PLL共享方案需要重新权衡；单独用 PLL1 生成 MCO、CPU 改用其他时钟源会导致 CPU 时钟更低，增加第二套时钟合成方案则会增加功耗和复杂度。
+对于当前 320×240、1 FPS 图像链路，80 MHz 可以作为首轮验证配置，但不能未经 profiling 就断言一定够用。必须测量 DCMI+DMA、65-tap FIR、关键帧检测和 DAC DMA 的最坏执行时间。
 
-## 4. NUCLEO-U575ZI-Q 的 HSE 参考时钟
+如果 CPU 需要保持更高且固定的主频，可以考虑：
+1. 将 SYSCLK 选为独立时钟源，但该时钟的性能可能不足；
+2. 额外启用 PLL2 提供 CPU 时钟，但会增加功耗和时钟树复杂度；
+3. 重新分配图像算法/采样时钟。
 
-### 4.1 不要假设板载16MHz晶体已经安装
+本简化方案优先采用共享 PLL1_R，接受 CPU 约 80 MHz 的运行频率，并以实测工作负载决定是否保留。
 
-NUCLEO-U575ZI-Q 的 MB1549-C05 原理图把外部 HSE X3（NX2016SA 16MHz）及其负载电容位置标为可选/未装。必须先检查你手中的板卡版本和 X3 实物，不能直接假设默认已有16MHz HSE。
+### 4.1 图像 DAC 采样率的重算
 
-NUCLEO 用户手册列出的板载 HSE 晶体示例参数为16MHz、8pF、20ppm，并说明相应焊桥设置：
+如果 APB prescaler = /1，且相关定时器时钟来自 PCLK，则可近似使用：
 
-- SB47、SB49 OFF；
-- SB48 OFF；
-- SB4、SB5 ON；
-- X3 与 C59/C60 按晶体负载电容要求安装。
+$$
+f_s=\frac{f_{\mathrm{TIM}}}
+{(PSC+1)(ARR+1)}
+$$
 
-C59/C60 不应机械照抄固定值。应根据晶体 CL、PCB寄生和 STM32 HSE 振荡器设计指南 AN2867 计算。
+例如目标 100 kSa/s：
+- Tag0：HCLK=80 MHz，PSC=0，ARR=799，得到 100 kSa/s；
+- Tag9：HCLK≈81.728 MHz，PSC=0，ARR≈816，得到约 100.0337 kSa/s。
 
-### 4.2 实验室最快验证方式：外部16MHz有源振荡器
+若必须严格保持相同的长期平均采样率，可以评估 DMA 交替更新 ARR 的分数周期方案；但这会引入一个定时器 tick 量级的采样间隔变化，必须评估对图像重建的影响。也可以重新选择独立定时器时钟源，但要核对 STM32U575 对应 TIMx 的实际 kernel clock mux。
 
-若板载 X3 未安装，第一轮验证可使用16MHz CMOS 有源振荡器模块：
+所有基于 HCLK/PCLK 的 UART、SysTick、定时器、DAC 触发频率都应按实际 FRACN 重新计算，不能继续使用固定 80/160 MHz 的旧配置。
 
-- 输出接 PH0/OSC_IN（NUCLEO CN11 pin 29）；
+## 5. NUCLEO-U575ZI-Q 的 HSE 参考源
+
+### 5.1 先检查 X3 是否实际安装
+
+NUCLEO-U575ZI-Q 的板载 16 MHz HSE 晶体 X3 及其负载电容位置在部分板卡版本/配置中属于可选未装。不能只看用户手册就假设手上的板子已经安装。
+
+若使用板载 16 MHz 晶体，UM2861 Rev.10 给出的配置为：
+- SB47、SB49：OFF；
+- SB48：OFF；
+- SB4、SB5：ON；
+- X3、C59、C60 按实际晶体 CL 与 PCB 寄生选型和安装。
+
+用户手册给出的晶体示例参数为 16 MHz、8 pF、20 ppm。C59/C60 不应固定照抄某个数值，应按晶体负载电容 CL、引脚/PCB寄生电容和 AN2867 计算。
+
+### 5.2 外部有源时钟实验方式
+
+若没有安装 X3，可以先使用外部 16 MHz CMOS 有源振荡器：
+- 输出接 PH0/OSC_IN；
 - STM32 配置 HSE bypass；
-- SB47、SB49 ON；
-- SB48 OFF；
-- SB4、SB5 OFF；
-- PH1 可按板级设置作为 GPIO（具体检查 SB49/板卡布线）。
+- 按 UM2861 的 external oscillator to PH0 配置焊桥；
+- 先确认输出幅度、占空比、频率和 PH0 输入电气限制。
 
-外部时钟输出电平需满足 PH0 输入电气要求，建议3.3V CMOS、短走线、就近去耦。
+该方式适合 bring-up，但最终多 Tag 应采用频率稳定度明确的独立参考源。
 
-### 4.3 NUCLEO-U575ZI-Q 的临时实验时钟：ST-LINK MCO
+### 5.3 ST-LINK MCO 仅用于实验验证
 
-NUCLEO-U575ZI-Q 的 ST-LINK 参考时钟必须按**实际板卡版本和 ST-LINK 固件**确认，不能笼统假设为5MHz或8MHz：
+UM2861 描述 ST-LINK-V3E 的 MCO 默认 8 MHz，且可能随固件升级变化；板上默认连接状态也需要按板卡版本和焊桥确认。它可以作为单板 bring-up 的参考输入，但不应在没有实测和稳定度保证的情况下作为最终多 Tag 的高精度参考。
 
-- UM2861 Rev.10 对 ST-LINK-V3E 的默认 MCO 描述为8MHz，且可能随 ST-LINK 固件升级变化；默认8MHz由HSI/2产生，不应未经校准就当作高精度参考。
-- ST 官方社区的时钟配置说明指出，ST-LINK-V3 MCO可通过固件升级工具配置；若选择由ST-LINK外部HSE产生的5MHz（例如25MHz/5），比HSI/2的8MHz更适合作为实验参考。
-- 另有NUCLEO-U575案例使用ST-LINK/V2 MCO 5MHz。不同板卡版本不可混用其焊桥/频率假设。
+如果 PH0 实测为 8 MHz，可使用 HSE bypass、M=1、N=20、R=2、MCO /8，仍得到同一组 FRACN 表。此配置只用于实验，最终设计仍建议 16 MHz 晶体。
 
-**实验步骤：** 先用示波器/频率计测量PH0实际输入频率，再将CubeMX的HSE_VALUE、HSE bypass模式和PLL参数设置为相同数值。ST-LINK MCO仅用于单板bring-up，不作为最终多Tag产品的独立频率基准。
+## 6. MCO 输出与 ADG902 电平接口
 
-如果PH0实测为8MHz，保持R=2、MCO /8，将N改为20，PLL输入范围设为8～16MHz：
+![PLL1-MCO移频时钟原理图](schematics/01_pll1_mco_shift.svg)
 
-$$
-f_{\rm MCO}=10\,{\rm MHz}+61.03515625\cdot\rm FRACN\ {\rm Hz}.
-$$
+### 6.1 PA8 输出配置
 
-FRACN可使用：0、393、786、1180、1573、1966、2359、2753、3146、3539。
+STM32U575 数据手册确认 PA8 可复用为 AF0 MCO。建议：
+- GPIO mode：Alternate Function；
+- AF：AF0；
+- Output type：Push-pull；
+- Speed：Very High；
+- Pull：No Pull；
+- MCO source：PLLCLK（PLL1_R）；
+- MCO prescaler：/8。
 
-如果PH0实测为5MHz，保持R=2、MCO /8，将N改为32，PLL输入范围设为4～8MHz：
+PA8 输出 3.3 V 域的 10.xxx MHz 方波。走线尽量短，避免大电容探头直接加载 MCO。
 
-$$
-f_{\rm MCO}=10\,{\rm MHz}+38.14697265625\cdot\rm FRACN\ {\rm Hz}.
-$$
+### 6.2 为什么需要 1.8 V 缓冲
 
-FRACN可使用：0、629、1258、1887、2517、3146、3775、4404、5033、5662。
+ADG902 的 VDD 工作范围为 1.65～2.75 V，CTRL 输入不能超过器件电源电压。NUCLEO 默认 MCU I/O 为 3.3 V，因此不能将 PA8 直接连接到 1.8 V 供电的 ADG902 CTRL。
 
-两种实验输入都使PLL1 VCO保持在160～163.455MHz，PLL1_R保持在80～81.728MHz。**最终Tag仍建议使用独立16MHz HSE晶体或规格明确的外部参考源。**
+推荐使用 Nexperia 74AUP1G17GW：
+| 引脚 | 连接 |
+|---:|---|
+| 1 | NC，不连接 |
+| 2 | A，接 PA8/MCO |
+| 3 | GND |
+| 4 | Y，接 ADG902 CTRL |
+| 5 | VCC，接 1.8 V |
 
-### 4.4 HSE精度与多节点频率误差
+74AUP1G17 的供电范围为 0.8～3.6 V，输入耐受至 3.6 V，因此可在 VCC=1.8 V 时接收 3.3 V MCO 输入并输出 1.8 V 逻辑。U1 附近放置 100 nF 去耦；输出端预留 22～33 Ω 串联阻尼电阻，依据实测边沿调整。
 
-若最终每个Tag使用总频率误差为±20ppm的16MHz晶体，则在10.0～10.216MHz处，单节点绝对频率误差约为±200～204Hz。相邻两块板最坏相反误差约400～409Hz，因此名义24kHz中心间隔可能缩小至约23.59kHz。
+ADG902 使用 1.8 V 供电，并在 VDD 附近放置 100 nF 去耦。若未来整个 MCU I/O 域也运行在 1.8 V，且所有摄像头/调试/通信外设均兼容，才可评估省略缓冲器。
 
-如果单节点实际RF占用带宽确实为20kHz，剩余名义保护带约3.6kHz；这还没有计入PLL fractional spurs、近端相位噪声、开关谐波和温度漂移。若希望更大余量，应选总频率稳定度更好的晶体（例如10ppm或更好），并在整机温度范围内验证。
+### 6.3 射频开关的频移作用
 
-## 5. PLL1 初始化和寄存器配置顺序
+10.xxx MHz 只是一条数字控制时钟，不是 2.4 GHz RF 信号。ADG902 在这条时钟驱动下切换射频反射状态。真实反散射频谱取决于：
+- CW 激励频率和功率；
+- ADG902 两状态的反射系数；
+- D2 图像变容二极管的阻抗变化；
+- RF 匹配网络、天线和传播信道；
+- 方波控制的基波、奇次谐波及分数杂散。
 
-### 5.1 初始化顺序
+本设计允许存在镜频，但不等于忽略高次谐波或相邻 24 kHz 信道的杂散。图像 D2 的偏置和 2.4 GHz 匹配不属于本文件已定型内容。
 
-1. 先启动并等待 HSE ready；
-2. 如果当前 SYSCLK 正由 PLL1 提供，先将 SYSCLK 临时切到 HSE/MSI，再关闭 PLL1；
-3. 设置 PWR VOS Range 2，并等待电压缩放就绪；
-4. 设置 PLL1 source = HSE；
-5. 最终16MHz HSE配置PLL1M=1、PLL1N=10、PLL1R=2；5MHz或8MHz实验参考按4.3节更改N；
-6. 设置 PLL1RGE：16MHz HSE使用8～16MHz；5MHz实验参考使用4～8MHz；8MHz实验参考使用8～16MHz；
-7. 设置 PLL1 MBOOST/EPOD prescaler = DIV1；
-8. 关闭不需要的 PLL1_P 和 PLL1_Q 输出，仅使能 PLL1_R；
-9. 设置 FRACN；Tag0 可使用整数模式，Tag1～9启用 fractional mode；
-10. 启用 PLL1，等待 PLL1RDY；
-11. 设置 AHB/APB prescaler；
-12. 将 SYSCLK 切换到 PLL1_R；
-13. 配置 MCO source = PLLCLK（PLL1_R），MCO prescaler = /8；
-14. 配置 PA8 为 AF0 MCO、push-pull、very high speed、no pull；
-15. 等待 MCO 波形稳定后再开启 CW 激励/ADG902有效反射。
+## 7. 固件配置与启动流程
 
-PLL1 的 fractional mode 在配置时应遵循参考手册对 FRACN/FRACEN 的写入顺序。最简单可靠的方式是**每个 Tag 在启动阶段设置一次 FRACN，等待 PLL 锁定后不再动态改频**。如果需要运行中切换 Tag 频点，应先关闭 RF 激励或使 RF Switch 不发送，再按 HAL/LL 规定的 FRACEN 清零、等待参考时钟周期、写入 FRACN、重新使能的流程操作。
+### 7.1 Tag ID 到 FRACN
 
-### 5.2 LL 配置伪代码
+每块 Tag 在 Flash 参数、编译期宏或板上 ID 电阻中保存自己的 Tag ID。启动时查表获得 FRACN。无需在线测频、DAC 调谐或 SDR 回传。
 
-以下是基于 STM32U5 LL RCC 接口的配置骨架；不同 STM32CubeU5 版本的宏名称和外设头文件可能有差异，编译前需以安装版本的 stm32u5xx_ll_rcc.h 为准。
+### 7.2 初始化顺序
 
-    // 先确认 HSE 已经 ready。
-    // 若 PLL1 当前是 SYSCLK，先切换到 HSE/MSI 再关闭 PLL1。
+1. 配置 HSE 晶体模式或 HSE bypass，启动 HSE 并等待 HSERDY；
+2. 配置 PWR Voltage Scaling Range 2，等待 VOS ready；
+3. 根据实际 HCLK 和 VDD 设置 Flash latency；
+4. 如果 PLL1 当前是 SYSCLK，先切到安全时钟源，再关闭 PLL1；
+5. PLL1 source = HSE，M=2，N=20，R=2；
+6. PLL1 输入范围选择 8～16 MHz（本方案输入 8 MHz）；
+7. 配置 PLL1MBOOST/EPOD 等辅助项，按 STM32CubeU5/CubeMX 生成配置核对；
+8. 只使能 PLL1_R，关闭不需要的 P/Q 输出；
+9. Tag0 使用 FRACN=0 整数模式；Tag1～9 写入表中 FRACN 并使能 fractional mode；
+10. 使能 PLL1，等待 PLL1RDY；
+11. 配置 AHB/APB prescaler；推荐先 /1；
+12. SYSCLK 切换至 PLL1_R，HCLK 变为 80～81.728 MHz；
+13. MCO source = PLLCLK（PLL1_R），MCO prescaler=/8；
+14. PA8 配置 AF0 MCO；
+15. 初始化 1.8 V 逻辑电源、74AUP1G17 和 ADG902；
+16. 等待时钟稳定后再开启 CW 激励和有效模拟图像传输。
+
+Fractional mode 锁定时间在数据手册指定条件下最大约 65 µs；工程上建议留出更长的保守等待时间，并通过示波器/频率计验证稳定后再打开 RF 激励。
+
+### 7.3 LL 初始化代码骨架
+
+以下代码展示最终 16 MHz HSE 方案的主要配置关系。它不是完整可直接编译的工程，仍需补充 HSE 启动、VOS、Flash latency、超时保护、GPIO时钟和外设重配。请以项目安装的 STM32CubeU5 版本中 stm32u5xx_ll_rcc.h 的真实 API 名称为准。
+
+~~~c
+#include "main.h"
+#include "system_stm32u5xx.h"
+#include "stm32u5xx_ll_rcc.h"
+#include "stm32u5xx_ll_gpio.h"
+
+static const uint16_t tag_fracn[10] = {
+    0, 393, 786, 1180, 1573,
+    1966, 2359, 2753, 3146, 3539
+};
+
+static uint32_t pll1_r_hz(uint16_t fracn)
+{
+    /* HSE=16 MHz, M=2, N=20, R=2 */
+    uint64_t numerator =
+        16000000ULL * (20ULL * 8192ULL + fracn);
+
+    return (uint32_t)(numerator / (2ULL * 2ULL * 8192ULL));
+}
+
+void ShiftClock_Init(uint8_t tag_id)
+{
+    uint16_t fracn = (tag_id < 10U) ? tag_fracn[tag_id] : 0U;
+
+    /* 0. HSE must already be configured and HSERDY=1.
+       1. Configure VOS Range 2 and Flash latency before raising HCLK.
+       2. If PLL1 is current SYSCLK, switch to HSE/MSI first. */
 
     LL_RCC_PLL1_Disable();
-    while (LL_RCC_PLL1_IsReady()) {}
+    while (LL_RCC_PLL1_IsReady()) {
+        /* Add timeout/watchdog in production. */
+    }
 
     LL_RCC_PLL1_ConfigDomain_SYS(
         LL_RCC_PLL1SOURCE_HSE,
-        1U,     // M
-        10U,    // N
-        2U      // R
+        2U,     /* M */
+        20U,    /* N */
+        2U      /* R */
     );
 
     LL_RCC_PLL1_SetVCOInputRange(LL_RCC_PLLINPUTRANGE_8_16);
     LL_RCC_SetPll1EPodPrescaler(LL_RCC_PLL1MBOOST_DIV_1);
 
-    LL_RCC_PLL1_DisableDomain_SAI();   // 关闭 P 输出域
-    LL_RCC_PLL1_DisableDomain_48M();   // 关闭 Q 输出域
-    LL_RCC_PLL1_EnableDomain_SYS();    // 只开启 R 输出域
+    LL_RCC_PLL1_DisableDomain_SAI();   /* P output unused */
+    LL_RCC_PLL1_DisableDomain_48M();   /* Q output unused */
+    LL_RCC_PLL1_EnableDomain_SYS();    /* R output enabled */
 
     if (fracn == 0U) {
-        LL_RCC_PLL1FRACN_Disable();    // 整数模式
+        LL_RCC_PLL1FRACN_Disable();
     } else {
         LL_RCC_PLL1_SetFRACN(fracn);
         LL_RCC_PLL1FRACN_Enable();
     }
 
     LL_RCC_PLL1_Enable();
-    while (!LL_RCC_PLL1_IsReady()) {}
+    while (!LL_RCC_PLL1_IsReady()) {
+        /* Add timeout/watchdog in production. */
+    }
 
-    // VOS、Flash latency、AHB/APB prescaler需在CubeMX/启动代码中配置。
-    // SYSCLK切换至PLL1_R后，更新SystemCoreClock及外设时钟配置。
+    LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+    LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+    LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+    LL_RCC_SetAPB3Prescaler(LL_RCC_APB3_DIV_1);
 
-    LL_RCC_ConfigMCO(LL_RCC_MCO1SOURCE_PLLCLK, LL_RCC_MCO1_DIV_8);
-    // PA8配置为AF0 MCO，push-pull，very high speed，无上下拉。
+    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL1);
+    while (LL_RCC_GetSysClkSource() !=
+           LL_RCC_SYS_CLKSOURCE_STATUS_PLL1) {
+    }
 
-代码骨架不包含 HSE 焊桥/旁路设置、PWR VOS等待、Flash latency、超时/故障处理和 GPIO 初始化。请不要直接复制为量产固件。
+    SystemCoreClock = pll1_r_hz(fracn);
 
-## 6. PA8 MCO 与 ADG902 的逻辑电平接口
+    LL_RCC_ConfigMCO(LL_RCC_MCO1SOURCE_PLLCLK,
+                     LL_RCC_MCO1_DIV_8);
 
-### 6.1 PA8 输出
+    /* GPIOA clock must be enabled by application. */
+    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_8,
+                       LL_GPIO_MODE_ALTERNATE);
+    LL_GPIO_SetAFPin_8_15(GPIOA, LL_GPIO_PIN_8,
+                          LL_GPIO_AF_0);
+    LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_8,
+                             LL_GPIO_OUTPUT_PUSHPULL);
+    LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_8,
+                        LL_GPIO_SPEED_FREQ_VERY_HIGH);
+    LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_8,
+                       LL_GPIO_PULL_NO);
 
-STM32U575 数据手册的 AF 表确认 PA8 可配置 AF0=MCO。MCO输出频率为10.000～10.216MHz。建议：
+    /* Recompute timer/DAC trigger and UART clocks from actual FRACN. */
+}
+~~~
 
-- GPIO mode = Alternate Function；
-- AF = AF0；
-- output type = push-pull；
-- speed = very high；
-- no pull-up/no pull-down；
-- PA8到缓冲器输入走线尽量短；
-- 避免较大的探头电容直接挂在PA8。
+**注意：** 运行时修改 FRACN 需要按参考手册规定的 FRACEN 清零、等待参考周期、写入 FRACN、重新使能的顺序操作。当前设计只在启动时配置一次，不建议在图像发送期间动态改频。
 
-### 6.2 为什么3.3V MCO不能直接连接1.8V ADG902
+## 8. 图像采样与系统时钟兼容性
 
-ADG902的VDD工作范围为1.65～2.75V；其CTRL输入电压**不得超过VDD**。若ADG902使用1.8V供电，而STM32U575的VDD/PA8输出为3.3V，则不能直接连接。
+PLL1_R 作为 SYSCLK 后，HCLK 会随 Tag ID 变化。必须重新配置：
+- DCMI 像素时钟/采集时序；
+- 65-tap FIR 的实时执行预算；
+- DAC 定时器更新频率；
+- UART 波特率和 SysTick；
+- 所有依赖 HCLK/PCLK 的定时器。
 
-推荐增加一颗 Nexperia 74AUP1G17：
+例如 100 kSa/s 图像 DAC，Tag0 使用 80 MHz timer clock 时 PSC=0、ARR=799 可得到 100 kSa/s。Tag9 HCLK 约 81.728 MHz，使用 ARR=816 可得到约 100.0337 kSa/s。若要求严格平均采样率，需采用分数周期 ARR 序列或独立 timer clock，并测量采样时刻抖动对图像重建的影响。
 
-| 引脚 | 连接 |
-|---:|---|
-| 1 | NC，不连接 |
-| 2 | A，接PA8/MCO |
-| 3 | GND |
-| 4 | Y，接ADG902 CTRL |
-| 5 | VCC，接1.8V |
+建议在固件中根据 FRACN 计算真实 HCLK，更新 SystemCoreClock 和定时器参数；不能假定 HAL 的 SystemCoreClockUpdate 在当前版本中一定自动计入 PLL FRACN，须检查安装的 STM32CubeU5 源码。
 
-该器件输入耐受最高3.6V，VCC可工作在0.8～3.6V；1.8V供电时输出1.8V逻辑。其在1.65～1.95V供电下传播延迟最大约6.3ns（指定负载条件），对10MHz、100ns周期的时钟有足够的初步时序余量，但仍需测量实际边沿和负载。
+## 9. HSE 精度、频率误差与 24 kHz FDMA
 
-U1附近放置100nF去耦；U1输出到ADG902 CTRL之间可预留22～33Ω串联阻尼电阻。ADG902 VDD=1.8V并就近放置100nF去耦。
+### 9.1 两种不同误差
 
-**可选简化：** 若最终Tag将 STM32 的VDD/PA8 I/O域也设置为1.8V，且摄像头及其他所有外设都兼容1.8V逻辑，可评估PA8直接驱动1.8V供电的ADG902，省略74AUP1G17。NUCLEO的JP4可选择MCU VDD=3.3V或1.8V；更改前必须确认摄像头、串口、调试和其他外设电平兼容。对现有默认3.3V NUCLEO测试，建议保留U1。
+- **FRACN 量化误差：** 本方案表格最大约 30.5 Hz；
+- **HSE 绝对频率误差：** 若总频率稳定度为 ±20 ppm，在 10 MHz 处约 ±200 Hz，在 10.216 MHz 处约 ±204 Hz。
 
-## 7. PLL1 输出作为系统时钟对图像采集的影响
+因此实际 Tag 之间的频率误差主要由 HSE 决定，不是 FRACN 的 61 Hz 量化步进。
 
-因为本方案将PLL1_R作为SYSCLK，MCU主频不再是固定值：
+若相邻两个 Tag 的晶体误差方向相反，中心间距最坏可减少约 0.4 kHz，名义 24 kHz 间隔降到约 23.6 kHz。若单节点真实 RF 占用带宽为 20 kHz，剩余名义保护带约 3.6 kHz。
 
-\[
-f_{\rm SYSCLK}=8f_{\rm MCO}=80.000\ldots81.728\ {\rm MHz}.
-\]
+### 9.2 分数 PLL 杂散和相位噪声
 
-因此：
+ST 数据手册给出的 RMS jitter 指标是在特定测试条件下测得，不能直接代替本方案 160～163.5 MHz VCO、10 MHz MCO、24 kHz 偏移处的相位噪声曲线。
 
-1. HAL tick、SysTick、UART baud rate和基于HCLK/PCLK的定时器必须根据实际 FRACN 重新计算；
-2. 图像 DAC 的定时器触发频率不能继续使用固定80MHz/160MHz配置；
-3. 若APB prescaler=1，则定时器时钟可按HCLK计算：
+必须测量：
+1. FRACN=0 的整数模式；
+2. FRACN=393、786、1180 等分数模式；
+3. ±24 kHz、±48 kHz、±72 kHz 偏移附近的杂散；
+4. 10 个 Tag 同时工作时的邻道泄漏；
+5. 温度变化、供电变化和不同 HSE 批次下的中心频率偏差。
 
-\[
-f_s=\frac{f_{\rm TIM}}{(PSC+1)(ARR+1)}.
-\]
+**频率分辨率足够不代表 24 kHz FDMA 一定成立。** 最终结论必须由真实 RF 频谱和图像恢复结果决定。
 
-例如100kSa/s，Tag0的fTIM=80MHz，PSC=0、ARR=799；Tag9的fTIM≈81.72754MHz，PSC=0、ARR=816，得到约100.0337kSa/s。25.6kSa/s也可按同样方式逐Tag配置。若需要更精确的平均采样率，可考虑DMA交替更新ARR做分数周期抖动，但要评估采样时刻抖动和模拟图像恢复影响。
+## 10. 功耗估算
 
-建议固件在设置FRACN后，根据
+PLL 功耗必须与 MCU 核心功耗分开统计。数据手册 PLL 电流表给出了参考测试点，例如 VCO=160 MHz、一个输出、Range 1 时，LDO 供电约 370 µA、SMPS 供电约 260 µA；VCO=200 MHz、Range 2 时分别约 435 µA 和 300 µA。本方案是 VCO 160～163.456 MHz、Range 2，**数据手册没有给出完全相同测试点，不能将上述电流当作本方案的保证值**。
 
-\[
-f_{\rm SYSCLK}=\frac{f_{\rm HSE}}{M R}
-\left(N+\frac{\rm FRACN}{8192}\right)
-\]
+| 模块 | 功耗说明 |
+|---|---|
+| HSE晶体/驱动 | 由MCU HSE振荡器驱动，计入整机MCU供电 |
+| PLL1 | 数百 µA 量级参考，具体按VCO、VOS和供电模式实测 |
+| PA8 MCO输出 | 动态功耗由负载电容、IO电压、频率决定 |
+| 74AUP1G17 | 静态电流很低，10 MHz动态功耗与负载相关 |
+| 1.8 V LDO | 需计入自身静态电流和压差损耗 |
+| ADG902 CTRL | 输入电容约2.1 pF，静态电流小；动态电流随时钟和负载变化 |
 
-计算真实时钟，并更新SystemCoreClock、定时器ARR、UART baud等参数。**确认当前STM32CubeU5 HAL的SystemCoreClockUpdate/HAL_RCC_GetSysClockFreq是否正确计入FRACN；若未计入，需在应用中按上述公式修正。**
+仅从电容负载估算，CMOS时钟驱动动态功耗量级可按
 
-80～81.7MHz对HM0360的1FPS DCMI+DMA和65-tap FIR可能足够，但必须通过真实固件profiling确认。若CPU负载不够，不能简单把PLL1_R升到160MHz，因为该配置的10.216MHz上限需要PLL1_R约81.728MHz、MCO /8。
+$$
+P_{\mathrm{dyn}}\approx C_{\mathrm{load}}V^2f
+$$
 
-## 8. HSE精度、FRACN误差和FDMA保护带
+初步评估。PA8 到 U1 输入的负载、U1 到 ADG902 CTRL 的负载都应实测。不要把PLL的VDD电流、1.8V输出功率和LDO输入功率重复相加。
 
-### 8.1 两种误差来源
+若 PLL1 原本就作为 SYSCLK，PLL 核心功耗是 MCU 原有运行功耗的一部分，不能再次全部计作“新增移频模块功耗”。但本方案把CPU频率降到80～81.728MHz，CPU功耗也会变化，应测量整板电流而非只看 PLL 数据手册。
 
-- FRACN量化：本方案约±61Hz以内（表中最大目标误差约58Hz）。
-- HSE误差：例如16MHz晶体总稳定度±20ppm，在10MHz处约±200Hz，在10.216MHz处约±204Hz。
+## 11. 元器件清单
 
-因此最终中心频率精度主要由HSE决定，而不是FRACN分辨率。
-
-### 8.2 24kHz相邻节点的最坏中心间距
-
-若各Tag HSE总误差为±20ppm，相邻节点各自的误差方向最不利时，中心间距可能由24kHz缩小约0.4kHz，约为23.6kHz。
-
-若实际单节点RF占用带宽不超过20kHz，剩余名义保护带约3.6kHz。这一保护带仍需为PLL分数杂散、相位噪声、温漂、开关时钟边沿和强弱节点干扰留出空间。
-
-### 8.3 不能仅凭频率表宣布FDMA可用
-
-必须实测：
-- 每个FRACN频点的频谱；
-- 距载波±24kHz、±48kHz处的分数杂散与相噪；
-- 10个Tag同时工作时的邻道泄漏；
-- HSE温度漂移、老化和不同晶体批次的频率偏差；
-- RF Switch驱动波形的占空比、边沿和实际反散射信号OBW。
-
-STM32数据手册给出的PLL抖动测试条件并不等于本方案160MHz VCO、24kHz偏移处的完整相位噪声曲线。不能用“FRACN分辨率122Hz”代替频谱纯度验证。
-
-## 9. 功耗估算
-
-本方案不再有外置LC VCO、Q2振荡缓冲、变容调谐D1、四级分频器、外部计频逻辑和DAC反馈电路。
-
-| 功耗项 | 估算/依据 | 说明 |
-|---|---|---|
-| PLL1核心 | 数据手册给出PLL功耗参考点：VCO=160MHz、Range1、单输出时SMPS约260µA，LDO约370µA | 本配置VCO160～163.455MHz且HCLK为Range2；不是完全相同测试条件，需实测 |
-| HSE 16MHz晶体 | 由STM32 HSE振荡器驱动 | 需计入MCU功耗，依晶体CL和驱动等级 |
-| PA8 MCO输出 | 负载主要为U1输入约1.1pF及PCB寄生 | 动态功耗随负载、电压、频率变化 |
-| 74AUP1G17 | 1.8V供电，输入电容约1.1pF、输出电容约1.7pF | 低静态电流，10MHz动态功耗需实测 |
-| ADG902 CTRL | 输入电容约2.1pF，静态电流小于1µA典型 | 另计1.8V逻辑动态负载 |
-
-粗略估计，MCO GPIO、74AUP1G17和ADG902控制端的新增动态功耗处于约0.1～0.4mW量级（不含HSE、PLL及MCU内核）。PLL1核心功耗是MCU运行时钟的一部分；若PLL1本来已作为系统时钟，不能把整个PLL功耗再次作为“额外频移模块功耗”重复相加。
-
-本配置会将CPU频率从常见的160MHz配置降到80～81.7MHz，MCU核心功耗可能下降，但具体收益取决于固件执行时间、总线活动、外设和电源模式。需要分别测量HSE、PLL、MCO、缓冲器和ADG902控制支路的电流。
-
-## 10. 元器件与电路接口清单
-
-| 参考 | 器件/规格 | 数量 | 用途 |
+| Ref | 器件/规格 | 数量 | 用途/备注 |
 |---|---|---:|---|
-| U1 | STM32U575ZI（已有） | 1 | PLL1、MCO、PA5图像DAC |
-| X1 | 16MHz HSE晶体，建议10～20ppm总稳定度 | 1 | 多节点频率参考；NUCLEO可选X3位置 |
-| C1/C2 | 晶体负载电容，按CL/AN2867计算 | 2 | HSE晶体负载；不直接假设固定6.8pF |
-| U2 | 74AUP1G17GW，TSSOP5 | 1 | 3.3V MCO到1.8V ADG902控制电平 |
-| R1 | 22～33Ω | 1 | U2输出阻尼，预留DNP/调值 |
-| C3 | 100nF | 1 | U2 1.8V去耦 |
-| U3 | ADG902BRMZ（已有RF设计） | 1 | 反射式RF开关 |
-| C4 | 100nF | 1 | ADG902 VDD去耦 |
-| U4（可选） | 1.8V LDO | 1 | 若板上无可用1.8V外设电源 |
-| D2 | 图像变容二极管（原方案） | 1 | 图像模拟调制，保持独立 |
+| U1 | STM32U575ZI / NUCLEO-U575ZI-Q | 1 | PLL1、MCO、PA5图像DAC |
+| X3 | 16 MHz HSE晶体，建议总稳定度≤20 ppm | 1 | 若板上未装则补装 |
+| C59/C60 | HSE晶体负载电容 | 2 | 按CL和PCB寄生计算 |
+| U2 | Nexperia 74AUP1G17GW | 1 | 3.3V输入、1.8V施密特输出 |
+| R1 | 22～33 Ω | 1 | U2输出串联阻尼，预留调值 |
+| C3 | 100 nF | 1 | U2 1.8V去耦 |
+| U3 | ADG902BRMZ | 1 | RF反射开关，原系统已有 |
+| C4 | 100 nF | 1 | ADG902电源去耦 |
+| U4 | 1.8 V LDO（若无现成电源） | 1 | 给U2和ADG902供电 |
+| D2 | 原图像调制变容二极管 | 1 | 保留，独立于PLL频率生成 |
 
-**相比原LC VCO方案，频率产生所需的新增元器件主要是一颗HSE晶体（若板上没有）和一颗逻辑缓冲器。** 现有ADG902不属于新增频率合成器件。
+详细表格见 [BOM.csv](BOM.csv)。
 
-## 11. 固件频点设置
+## 12. 实验验证计划
 
-Tag ID 可通过 Flash 参数、编译期宏或板上ID电阻读取。启动时按下表取得FRACN：
-
-| Tag ID | FRACN |
-|---:|---:|
-| 0 | 0 |
-| 1 | 197 |
-| 2 | 393 |
-| 3 | 590 |
-| 4 | 786 |
-| 5 | 983 |
-| 6 | 1180 |
-| 7 | 1376 |
-| 8 | 1573 |
-| 9 | 1769 |
-
-推荐流程：
-1. 读取Tag ID；
-2. 关闭RF激励或保持RF开关不进入有效传输；
-3. 启用HSE并等待稳定；
-4. 配置PLL1 M/N/R、FRACN、P/Q/R输出使能；
-5. 等待PLL1RDY（数据手册fractional mode锁定时间最大约65µs），建议再留保守的稳定等待时间；
-6. 配置SYSCLK、MCO /8、PA8 AF0；
-7. 配置U1和ADG902电源；
-8. 按实际SYSCLK重新配置DAC采样定时器、SysTick和UART；
-9. 先观察PA8频率与波形，再启动CW和模拟图像传输。
-
-本方案**不需要Tag本地频率计数反馈**。若想在研发阶段验证频率，可用外部频率计/示波器，但它不参与Tag运行闭环。
-
-## 12. 验证计划
-
-| 阶段 | 操作 | 验收项目 |
+| 阶段 | 实验 | 目标 |
 |---|---|---|
-| 1 | 检查/安装16MHz HSE | PH0/PH1晶体或外部时钟启动正确 |
-| 2 | 单Tag FRACN=0 | PA8输出10.000MHz |
-| 3 | 单Tag FRACN=197、393、…、1769 | 频率覆盖10.000～10.216MHz |
-| 4 | PA8接U1/ADG902 | CTRL高低电平符合ADG902限制，开关可靠工作 |
-| 5 | 频谱仪测PA8和PLL输出 | 分数杂散、相噪、谐波和频率偏差 |
-| 6 | 连接CW及RF负载 | 实际反散射频移位置、镜频、OBW |
-| 7 | 连接图像DAC/D2 | 图像信号频谱和重建质量 |
-| 8 | 多Tag同时工作 | 24kHz邻道干扰、强弱节点、温漂 |
-| 9 | MCU运行负载测试 | 80～81.7MHz下DCMI、FIR、DAC DMA实时性 |
-| 10 | 功耗分轨测量 | HSE、PLL、MCO、buffer、RF switch控制的电流 |
+| 1 | 检查X3、C59/C60及SB4/SB5 | 确认HSE来源与模式 |
+| 2 | Tag0，FRACN=0 | PA8输出10.000MHz |
+| 3 | FRACN扫描0～3539 | 覆盖10.000～10.216MHz |
+| 4 | 连接U2与ADG902 | CTRL电平满足1.8V供电要求 |
+| 5 | 测量整数/分数模式频谱 | 观察分数杂散、谐波和占空比 |
+| 6 | 接入CW和RF匹配板 | 测量实际移频位置、镜频、OBW |
+| 7 | 接入PA5/D2图像通道 | 测量图像信号频谱与恢复质量 |
+| 8 | 两个Tag同时工作 | 测量24kHz相邻通道干扰 |
+| 9 | 10个Tag同时工作 | 验证全频点分配和强弱节点问题 |
+| 10 | 实际图像固件运行 | 确认80～81.728MHz CPU时限足够 |
 
-### 通过条件
+建议保存每个Tag的 HSE 实际频率、FRACN、PA8 实测频率、PLL锁定时间、相位噪声/杂散、RF 99% OBW、邻道泄漏、图像 PSNR/SSIM、帧丢失率和每条电源轨电流。
 
-- PA8各频点连续、稳定、无丢脉冲；
-- FRACN实际频率与公式一致；
-- ADG902 CTRL不超过VDD；
-- 24kHz相邻节点在真实图像信号下可分离；
-- MCU 80～81.7MHz运行仍能按时完成图像采集、滤波和DAC输出；
-- PLL fractional spur和近端相位噪声不会显著破坏模拟FDMA。
+## 13. 风险与设计边界
 
-## 13. 主要风险与边界
+1. NUCLEO-U575ZI-Q 的 16 MHz HSE 晶体 X3 可能未安装，必须检查实物。
+2. PLL1 fractional spur 和 24 kHz 邻道相位噪声尚未实测。
+3. HSE 的温漂、老化和批次偏差决定多 Tag 实际中心频率误差。
+4. CPU 主频随 Tag FRACN 变化，图像采样定时器必须同步重算。
+5. 3.3 V PA8 不可直接驱动 1.8 V 供电的 ADG902 CTRL。
+6. MCO 方波含高次谐波，需检查其在 RF 反散射频谱中的影响。
+7. 本方案不包含 D2 的 2.4 GHz 匹配网络和天线设计。
+8. 不需要外部 FLL，但这不意味着无需实验室频率计/频谱仪进行研发验证。
 
-1. **HSE未装：** NUCLEO-U575ZI-Q的C05原理图把X3外部HSE晶体和C59/C60列为可选未装。必须检查实板；不要默认有16MHz晶体。
-2. **CPU降频：** 本方案SYSCLK为80～81.728MHz，而非160MHz。要重新测量图像算法时限。
-3. **频率精度依赖HSE：** FRACN只有量化分辨率，不会校准每块板的晶体偏差。
-4. **Fractional spurs：** PLL分数模式可能出现杂散；必须在±24kHz附近测量。
-5. **MCO电平：** 3.3V PA8不能直接连接1.8V供电的ADG902 CTRL；保留U2，或确保整个MCU IO域也为1.8V且所有外设兼容。
-6. **MCO不是RF输出：** PA8只是10MHz控制时钟，真正2.4GHz反散射由ADG902与变容负载的射频阻抗变化形成。
-7. **谐波：** 方波开关控制会产生奇次谐波边带，除镜频外还应测量±3f、±5f等分量。
-8. **RF匹配未完成：** 本文件不声称ADG902后的2.4GHz网络已经定型。
+## 14. 官方资料与设计依据
 
-## 14. 厂商资料
-
-- [STM32U575 数据手册 DS13737 Rev.10](https://www.st.com/resource/en/datasheet/stm32u575vg.pdf)：PLL、MCO、PA8 AF0、HCLK/VOS限制、PLL功耗和抖动指标。
-- [STM32U5 参考手册 RM0456](https://www.st.com/resource/en/reference_manual/rm0456-stm32u575585-armbased-32bit-mcus-stmicroelectronics.pdf)：PLL1、FRACN、RCC、MCO寄存器和时钟切换时序。
-- [STM32U5 LL RCC接口](https://github.com/STMicroelectronics/stm32u5xx_hal_driver)：PLL1配置与MCO接口；以项目实际CubeU5版本为准。
-- [NUCLEO-U575ZI-Q用户手册 UM2861](https://www.st.com/resource/en/user_manual/um2861-stm32u575ziq-nucleo-64-board-mb1549-stmicroelectronics.pdf)：HSE X3、STLINK MCO和焊桥配置。
-- [MB1549-U575ZIQ-C05官方原理图](https://www.st.com/resource/en/schematic_pack/mb1549-u575ziq-c05-schematic.pdf)：X3 HSE可选未装、PH0/PH1、PA8连接。
-- [ST官方社区：NUCLEO板FDCAN时钟配置](https://community.st.com/stm32-mcus-60/stm32-fdcan-running-at-8-mb-s-on-nucleo-boards-141121)：列出NUCLEO-U575使用ST-LINK/V2 MCO 5MHz的案例，并要求核对板上ST-LINK版本。
-- [ST官方社区：ST-LINK-V3 MCO精确时钟配置](https://community.st.com/stm32-mcus-60/how-to-use-stlink-v3-mco-output-on-nucleo-boards-as-a-precise-clock-source-for-stm32-140173)：说明V3 MCO可由外部HSE分频配置，不能把HSI/2默认8MHz当作高精度参考。
-- [Nexperia 74AUP1G17 Rev.14](https://assets.nexperia.com/documents/data-sheet/74AUP1G17.pdf)：输入3.6V耐受、1.8V输出、传播延迟和功耗。
-- [ADI ADG901/ADG902 Rev.D](https://www.analog.com/media/en/technical-documentation/data-sheets/adg901_902.pdf)：ADG902 VDD=1.65～2.75V、CTRL不得超过VDD、CTRL VIH/VIL和输入电容。
+- [STM32U575 数据手册 DS13737](https://www.st.com/resource/en/datasheet/stm32u575zi.pdf)：PLL输入范围、VCO/R输出范围、FRACN、PLL锁定时间、PLL电流、PA8 AF0。
+- [STM32U5 参考手册 RM0456](https://www.st.com/resource/en/reference_manual/rm0456-stm32u5-series-armbased-32bit-mcus-stmicroelectronics.pdf)：RCC、PLL1、FRACN寄存器、MCO和时钟树。
+- [NUCLEO-U575ZI-Q 用户手册 UM2861](https://www.st.com/resource/en/user_manual/um2861-stm32u575ziq-nucleo-64-board-mb1549-stmicroelectronics.pdf)：X3 HSE、焊桥和ST-LINK MCO配置。
+- [Nexperia 74AUP1G17 数据手册](https://assets.nexperia.com/documents/data-sheet/74AUP1G17.pdf)：3.6V耐受输入、1.8V输出、传播延迟与功耗。
+- [ADI ADG901/ADG902 数据手册](https://www.analog.com/media/en/technical-documentation/data-sheets/adg901_902.pdf)：ADG902电源范围、CTRL电平、RF特性。
+- [NUCLEO-U575ZI-Q 板级原理图](https://www.st.com/resource/en/schematic_pack/mb1549-u575ziq-c05-schematic.pdf)：X3及C59/C60可选器件和焊桥。
 
 ---
 
-**最终建议：** 先用现有NUCLEO-U575ZI-Q验证16MHz HSE、PLL1 fractional、PA8 MCO和10个FRACN频点。先不要制作LC VCO/FLL板。若PLL输出的相位噪声、分数杂散和多Tag邻道性能通过，再将该方案作为最终Tag的频率产生架构。
+**最终建议：** 先在现有 NUCLEO-U575ZI-Q 上验证 HSE → PLL1 fractional-N → MCO /8 → PA8 的单板输出和 10 个 FRACN 频点；再接入 1.8 V 缓冲器和 ADG902。只有在整数/分数模式频谱、24 kHz 邻道干扰和真实图像 OBW 都满足要求后，才将该方案冻结为最终 Tag 频率源。
