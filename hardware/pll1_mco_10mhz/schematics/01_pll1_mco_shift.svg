@@ -37,13 +37,13 @@
 <path d="M510 260 H550 M510 420 H550" stroke="#203d55" stroke-width="2.8" fill="none"/>
 <rect x="630" y="270" width="450" height="260" rx="5" fill="#e8f2f9" stroke="#4c7897" stroke-width="2"/>
 <text x="658" y="310" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="23" font-weight="700" fill="#1c4e70">内部 PLL1（fractional-N）</text>
-<text x="658" y="355" font-family="Arial,sans-serif" font-size="19" fill="#203d55">M = 1   N = 10   R = 2</text>
-<text x="658" y="395" font-family="Arial,sans-serif" font-size="19" fill="#203d55">FRACN = 0…1769（16 MHz HSE）</text>
-<text x="658" y="440" font-family="Arial,sans-serif" font-size="18" fill="#203d55">VCO = 160…163.455 MHz</text>
+<text x="658" y="355" font-family="Arial,sans-serif" font-size="19" fill="#203d55">M = 2   N = 20   R = 2</text>
+<text x="658" y="395" font-family="Arial,sans-serif" font-size="19" fill="#203d55">FRACN = 0…3539（16 MHz HSE）</text>
+<text x="658" y="440" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PLL输入=8MHz；VCO=160…163.456MHz</text>
 <text x="658" y="478" font-family="Arial,sans-serif" font-size="18" fill="#203d55">PLL1_R = SYSCLK = 80…81.728 MHz</text>
 <text x="580" y="590" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="17" fill="#8b5a21">VOS Range 2；HCLK ≤110 MHz。P/Q关闭，仅启用R输出。</text>
 <text x="580" y="628" font-family="Arial,sans-serif" font-size="18" fill="#145b86" font-weight="700">PA8 / AF0 = MCO1</text>
-<text x="580" y="662" font-family="Arial,sans-serif" font-size="17" fill="#536b7c">MCO source = PLLCLK（PLL1_R），prescaler = /8</text>
+<text x="580" y="662" font-family="Arial,sans-serif" font-size="17" fill="#536b7c">MCO source = PLL1_R，prescaler = /8；分辨率=61.035Hz</text>
 <text x="580" y="705" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="16" fill="#536b7c">CPU主频随Tag变化：80.000～81.728 MHz，需重算定时器。</text>
 
 <!-- MCO path -->
