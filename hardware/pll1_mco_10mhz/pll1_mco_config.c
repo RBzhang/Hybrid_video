@@ -4,9 +4,10 @@
  * Final Tag clock source:
  *   HSE 16 MHz crystal, M=1, N=10, R=2.
  *
- * NUCLEO-U575ZI-Q bench-only alternative:
- *   ST-LINK MCO 5 MHz, HSE bypass, M=1, N=32, R=2.
- *   Check the exact board revision; ST's NUCLEO-U575 example uses R5 + SB48.
+ * NUCLEO-U575ZI-Q bench-only alternatives:
+ *   ST-LINK MCO 8 MHz: HSE bypass, M=1, N=20, R=2.
+ *   ST-LINK MCO 5 MHz: HSE bypass, M=1, N=32, R=2.
+ *   Check the exact board revision/firmware and MEASURE PH0 before selecting.
  *
  * SYSCLK = PLL1_R = 80 ... 81.728 MHz.
  * MCO = PLL1_R / 8 = 10 ... 10.216 MHz.
@@ -25,6 +26,12 @@
 static const uint16_t g_tag_fracn[10] = {
     0U, 197U, 393U, 590U, 786U, 983U, 1180U, 1376U, 1573U, 1769U
 };
+#elif (HSE_VALUE == 8000000UL)
+#define PLL1_N_VALUE       20U
+#define PLL1_INPUT_RANGE   LL_RCC_PLLINPUTRANGE_8_16
+static const uint16_t g_tag_fracn[10] = {
+    0U, 393U, 786U, 1180U, 1573U, 1966U, 2359U, 2753U, 3146U, 3539U
+};
 #elif (HSE_VALUE == 5000000UL)
 #define PLL1_N_VALUE       32U
 #define PLL1_INPUT_RANGE   LL_RCC_PLLINPUTRANGE_4_8
@@ -32,7 +39,7 @@ static const uint16_t g_tag_fracn[10] = {
     0U, 629U, 1258U, 1887U, 2517U, 3146U, 3775U, 4404U, 5033U, 5662U
 };
 #else
-#error "This example supports HSE_VALUE=16 MHz (final) or 5 MHz (NUCLEO bench only)."
+#error "Supported HSE_VALUE: 16 MHz final crystal, 8 MHz ST-LINK-V3E default bench, or 5 MHz HSE-based ST-LINK bench."
 #endif
 
 static uint32_t PLL1_R_Hz_From_FRACN(uint16_t fracn)
