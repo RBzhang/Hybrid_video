@@ -1,0 +1,24 @@
+* Rev.C VCO only - generic uncalibrated transistor/varactor model; startup NOT proven
+.param VT=1.5
+VCC VDD 0 3.3
+R1 VDD BASE 200k
+R2 BASE 0 100k
+CB BASE 0 100n
+L1 VDD LTOP 1u
+RL LTOP TANK 1
+Q1 TANK BASE EMIT Q3904
+C1a TANK EMIT 220p
+C1b TANK EMIT 47p
+C2 EMIT 0 1.5n
+RE EMIT 0 3.3k
+C3 TANK VAR_A 100p
+RLEAK VAR_A 0 1meg
+V_TUNE VTUNE 0 {VT}
+DVAR VAR_A VTUNE DVARMODEL
+.model DVARMODEL D(IS=1p RS=0.5 CJO=35p VJ=1 M=0.75)
+.model Q3904 NPN(IS=6.7f BF=150 VAF=80 CJE=8p CJC=4p TF=0.4n)
+.ic V(TANK)=3.1 V(EMIT)=0.45
+.tran 0 300u 0 1n uic
+.step param VT list 0.5 1 1.5 2 2.5 3
+.save V(TANK) V(EMIT) I(VCC)
+.end
