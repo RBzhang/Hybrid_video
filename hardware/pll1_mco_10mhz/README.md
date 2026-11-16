@@ -7,7 +7,7 @@
 - [PLL1/MCO初始化代码骨架](pll1_mco_config.c)
 - [10个Tag的FRACN频率表](tag_frequency_table.csv)
 
-**重要：** NUCLEO-U575ZI-Q C05原理图把外部HSE X3及C59/C60列为可选未装，先检查实板。若没有16MHz HSE，必须安装晶体或外部16MHz时钟。STLINK MCO 8MHz只建议临时验证，不用于最终多Tag频率精度。
+**重要：** NUCLEO-U575ZI-Q C05原理图把外部HSE X3及C59/C60列为可选未装，先检查实板。若没有16MHz HSE，必须安装晶体或外部16MHz时钟。NUCLEO-U575的ST-LINK MCO实验参考为5MHz（需R5、SB48配置并使用HSE bypass），仅用于单板验证；最终多Tag建议使用独立16MHz HSE晶体或合格外部参考。
 
 本方案的SYSCLK随Tag频点为80～81.728MHz；PA8输出MCO为10～10.216MHz。3.3V PA8不能直接驱动1.8V供电的ADG902 CTRL，默认需要1.8V供电、输入耐受3.6V的74AUP1G17缓冲器；若整套MCU I/O和ADG902均为1.8V，可另行评估直连。
 
