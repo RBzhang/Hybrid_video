@@ -465,6 +465,8 @@ Tag ID 可通过 Flash 参数、编译期宏或板上ID电阻读取。启动时�
 - [STM32U5 LL RCC接口](https://github.com/STMicroelectronics/stm32u5xx_hal_driver)：PLL1配置与MCO接口；以项目实际CubeU5版本为准。
 - [NUCLEO-U575ZI-Q用户手册 UM2861](https://www.st.com/resource/en/user_manual/um2861-stm32u575ziq-nucleo-64-board-mb1549-stmicroelectronics.pdf)：HSE X3、STLINK MCO和焊桥配置。
 - [MB1549-U575ZIQ-C05官方原理图](https://www.st.com/resource/en/schematic_pack/mb1549-u575ziq-c05-schematic.pdf)：X3 HSE可选未装、PH0/PH1、PA8连接。
+- [ST官方社区：NUCLEO板FDCAN时钟配置](https://community.st.com/stm32-mcus-60/stm32-fdcan-running-at-8-mb-s-on-nucleo-boards-141121)：列出NUCLEO-U575使用ST-LINK/V2 MCO 5MHz的案例，并要求核对板上ST-LINK版本。
+- [ST官方社区：ST-LINK-V3 MCO精确时钟配置](https://community.st.com/stm32-mcus-60/how-to-use-stlink-v3-mco-output-on-nucleo-boards-as-a-precise-clock-source-for-stm32-140173)：说明V3 MCO可由外部HSE分频配置，不能把HSI/2默认8MHz当作高精度参考。
 - [Nexperia 74AUP1G17 Rev.14](https://assets.nexperia.com/documents/data-sheet/74AUP1G17.pdf)：输入3.6V耐受、1.8V输出、传播延迟和功耗。
 - [ADI ADG901/ADG902 Rev.D](https://www.analog.com/media/en/technical-documentation/data-sheets/adg901_902.pdf)：ADG902 VDD=1.65～2.75V、CTRL不得超过VDD、CTRL VIH/VIL和输入电容。
 
