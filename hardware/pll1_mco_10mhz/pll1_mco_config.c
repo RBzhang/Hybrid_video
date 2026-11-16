@@ -14,7 +14,8 @@
  * This is a configuration skeleton, not a complete CubeMX project.
  * Configure HSE mode, VOS, Flash latency, clock timeouts and PA8 GPIO first.
  */
-#include "stm32u5xx.h"
+#include "main.h"                 /* HSE_VALUE / HAL configuration */
+#include "system_stm32u5xx.h"    /* SystemCoreClock */
 #include "stm32u5xx_ll_rcc.h"
 #include "stm32u5xx_ll_gpio.h"
 
