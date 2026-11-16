@@ -71,6 +71,10 @@ void PLL1_MCO10MHz_Init(uint8_t tag_id)
      *    source (HSE/MSI), then disable/reconfigure PLL1.
      */
 
+    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
+    while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE) {
+    }
+
     LL_RCC_PLL1_Disable();
     while (LL_RCC_PLL1_IsReady()) {
         /* Add timeout/watchdog handling in production firmware. */
