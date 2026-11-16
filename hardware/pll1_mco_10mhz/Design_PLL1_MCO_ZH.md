@@ -8,6 +8,8 @@
 > **核心架构：** 16 MHz HSE → STM32U575 PLL1 fractional-N → PLL1_R → MCO /8 → 1.8 V 逻辑缓冲 → ADG902 CTRL
 
 > **设计状态：** 本文是基于 ST 官方数据手册、参考手册和 NUCLEO 用户手册形成的工程设计方案。频率表为理论计算值；尚未在实物板上验证 MCO 分数杂散、相位噪声、24 kHz 邻道性能及完整图像链路。不得将计算值视为实测或量产保证。
+>
+> **HTML 版本：** [Design_PLL1_MCO_ZH.html](Design_PLL1_MCO_ZH.html)
 
 ## 0. 设计结论
 
