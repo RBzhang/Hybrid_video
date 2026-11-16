@@ -1,3 +1,7 @@
+> **方案状态更新：** 对于当前STM32U575平台，优先评估新的 [PLL1 fractional-N + MCO简化方案](../pll1_mco_10mhz/Design_PLL1_MCO_ZH.md)。本目录的离散LC VCO + Tag本地FLL方案保留为备选/历史设计，只有在PLL fractional spur或相噪不满足24kHz FDMA时再考虑回退。
+
+---
+
 ## 移频产生核心逻辑（简明版，标准电路符号）
 
 - **[简明中文说明与两张IEC风格电路图](Core_Shift_Logic_ZH.md)**
