@@ -2,6 +2,15 @@
 
 **推荐简化方案：** 直接使用 STM32U575 PLL1 的 13 bit FRACN 分数配置，PLL1_R 经 MCO /8 输出 10.000～10.216 MHz，按 24 kHz 间隔分配 10 个 Tag；不需要外置 LC VCO、频率调节 DAC、÷16 测频器或 Tag 本地 FLL。
 
+## 板卡最小输出工程（新增）
+
+- **[NUCLEO-U575ZI-Q / Keil5 最小输出工程及构建步骤](firmware/README.md)**
+- [唯一的 Tag 编号与时钟参考配置入口](firmware/Core/Inc/tag_clock_config.h) — 修改 `TAG_ID=0..9`
+- [PLL1 / MCO 初始化源码](firmware/Core/Src/tag_clock.c)
+- [最小 main.c](firmware/Core/Src/main.c)
+
+新工程仅在 PA8/MCO 输出 10.xxx MHz 的 3.3 V 方波，不包含 ADG902、DAC、RF 或摄像头。为了不需要修改默认 NUCLEO 板卡焊桥，首轮验证采用 HSI16；为了更精确的 24 kHz 频点间隔，请按工程 README 改用外部 HSE 参考。**未进行实板编译与测量。**
+
 ## 中文设计文档
 
 - [完整中文设计文档（Markdown）](Design_PLL1_MCO_ZH.md)
@@ -27,11 +36,10 @@
 
 NUCLEO-U575ZI-Q C05 原理图把外部 HSE X3 及 C59/C60 列为可选未装，先检查实板。若没有 16 MHz HSE，必须安装合适晶体或外部 16 MHz 时钟。ST-LINK MCO 可用于单板 bring-up，但最终多 Tag 应使用稳定度明确的 HSE 参考。
 
-本方案推荐 SYSCLK 共享 PLL1_R，因此 CPU/HCLK 随 Tag 频点变化为 80.000～81.728 MHz。需要重新核算 DCMI、FIR、DAC、定时器和 UART 时序。
+本方案推荐 SYSCLK 共享 PLL1_R，因此 CPU/HCLK 随 Tag 频点变化为 80.000～81.728 MHz。需要重新核算 DCMI、FIR、DAC、定时器和 UART 时序。**纯 MCO 最小工程不采用此 SYSCLK 共享配置，而是固定 HSI16 作为 CPU 时钟。**
 
 3.3 V PA8 不能直接驱动 1.8 V 供电的 ADG902 CTRL。默认使用输入耐受 3.6 V 的 74AUP1G17，VCC=1.8 V。若整套 MCU I/O 与 ADG902 均为 1.8 V，才可另行评估直连。
 
 ## 设计状态
 
 这是设计与验证方案，不是已测量通过的硬件。PLL fractional spur、24 kHz 邻道相位噪声、HSE 温漂、多 Tag 同时发送性能必须实测。完整的 2.4 GHz 图像变容调制与天线匹配网络不属于本目录的已完成范围。
-
