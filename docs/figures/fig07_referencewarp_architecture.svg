@@ -67,9 +67,9 @@
 <text x="478" y="736" text-anchor="middle" font-size="17" font-weight="500" fill="#548971">多尺度 Key 特征</text>
 <rect x="408" y="745" width="137" height="32" rx="16" fill="#d1eadc" stroke="#d1eadc" stroke-width="1"/>
 <text x="476.5" y="767" text-anchor="middle" font-size="16" font-weight="700" fill="#2b7a54">共享权重 θK</text>
-<path d="M269 324 H357" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
-<path d="M269 524 H357" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
-<path d="M269 724 H357" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M269 324 H357" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M269 524 H357" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M269 724 H357" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
 <rect x="709" y="264" width="355" height="122" rx="15" fill="#fff9ef" stroke="#e7cfa5" stroke-width="2.2"/>
 <text x="887" y="301" text-anchor="middle" font-size="22" font-weight="750" fill="#815516">Differentiable Warping</text>
 <text x="887" y="335" text-anchor="middle" font-size="20" font-weight="650" fill="#845b25">前一关键帧特征对齐</text>
@@ -89,17 +89,17 @@
 <rect x="895" y="518" width="144" height="58" rx="11" fill="#fff" stroke="#c4b4eb" stroke-width="1.7"/>
 <text x="967" y="541" text-anchor="middle" font-size="19" font-weight="700" fill="#6744a0">1/8 scale</text>
 <text x="967" y="562" text-anchor="middle" font-size="15" font-weight="500" fill="#8671a1">Flow / Offset</text>
-<path d="M590 324 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
-<path d="M590 724 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
-<path d="M641 324 V481 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
-<path d="M641 724 V568 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
-<path d="M590 524 H701" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
-<path d="M869 446 V392 H868 V386" fill="none" stroke="violet" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
-<path d="M920 602 V648 H914 V657" fill="none" stroke="violet" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<path d="M590 324 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M590 724 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M641 324 V481 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M641 724 V568 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M590 524 H701" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M869 446 V392 H868 V386" fill="none" stroke="#805ecb" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<path d="M920 602 V648 H914 V657" fill="none" stroke="#805ecb" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
 <text x="1040" y="411" text-anchor="middle" font-size="14" font-weight="600" fill="#8566b5">1/4 · 1/8</text>
 <text x="1040" y="635" text-anchor="middle" font-size="14" font-weight="600" fill="#8566b5">1/4 · 1/8</text>
-<path d="M1064 326 H1139 V489 H1198" fill="none" stroke="amber" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
-<path d="M1064 719 H1139 V548 H1198" fill="none" stroke="amber" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M1064 326 H1139 V489 H1198" fill="none" stroke="#d28b38" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M1064 719 H1139 V548 H1198" fill="none" stroke="#d28b38" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
 <rect x="1206" y="441" width="230" height="167" rx="16" fill="#fff6e3" stroke="#efd59b" stroke-width="2.2"/>
 <rect x="1224" y="457" width="80" height="32" rx="16" fill="#ffe8b7" stroke="#ffe8b7" stroke-width="1"/>
 <text x="1264" y="479" text-anchor="middle" font-size="16" font-weight="700" fill="#9b7425">GATE</text>
@@ -112,11 +112,11 @@
 <text x="1632" y="518" text-anchor="middle" font-size="23" font-weight="750" fill="#9a3d44">Fusion Decoder</text>
 <text x="1632" y="551" text-anchor="middle" font-size="16" font-weight="500" fill="#b16e70">融合观测与对齐特征</text>
 <text x="1632" y="576" text-anchor="middle" font-size="16" font-weight="500" fill="#b16e70">预测当前帧残差 ΔIₜ</text>
-<path d="M1436 524 H1510" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M1436 524 H1510" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
 <path d="M590 514 H668 V710" fill="none" stroke="#2d68b7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M668 710 Q684 724 668 739" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M668 710 Q684 724 668 739" fill="none" stroke="#2d68b7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M668 739 V822 H1634 V612" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M668 739 V822 H1634 V612" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
 <rect x="995" y="806" width="215" height="32" rx="16" fill="#e7f0ff" stroke="#e7f0ff" stroke-width="1"/>
 <text x="1102.5" y="828" text-anchor="middle" font-size="16" font-weight="700" fill="#2d68b7">Observation features</text>
 <rect x="1805" y="279" width="211" height="497" rx="17" fill="#fff" stroke="#dbe3ec" stroke-width="2"/>
@@ -125,14 +125,14 @@
 <rect x="1829" y="358" width="163" height="76" rx="11" fill="#f5f7fb" stroke="#d2dce8" stroke-width="1.4"/>
 <text x="1910" y="390" text-anchor="middle" font-size="20" font-weight="700" fill="#47627d">Residual</text>
 <text x="1910" y="414" text-anchor="middle" font-size="22" font-weight="750" fill="#48647d">ΔIₜ</text>
-<path d="M1745 524 H1780 V395 H1821" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
-<path d="M1910 434 V467" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M1745 524 H1780 V395 H1821" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M1910 434 V467" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
 <circle cx="1910" cy="496" r="27" fill="#eaf3ff" stroke="#9bb9df" stroke-width="2"/>
 <text x="1910" y="506" text-anchor="middle" font-size="31" font-weight="750" fill="#3168ac">+</text>
 <text x="1990" y="489" text-anchor="middle" font-size="19" font-weight="650" fill="#2d68b7">Iₜ</text>
-<path d="M1970 495 H1940" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M1970 495 H1940" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
 <text x="1910" y="558" text-anchor="middle" font-size="21" font-weight="750" fill="#284c76">Îₜ = Iₜ + ΔIₜ</text>
-<path d="M1910 572 V603" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M1910 572 V603" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
 <rect x="1833" y="606" width="155" height="92" rx="8" fill="#e8f2f5" stroke="#adbfce" stroke-width="1.5"/>
 <path d="M1835 675 L1859 648 L1877 659 L1912 625 L1938 658 L1960 645 L1986 674 V697 H1835 Z" fill="#a4bcc0"/>
 <circle cx="1963" cy="630" r="8" fill="#fff"/>
