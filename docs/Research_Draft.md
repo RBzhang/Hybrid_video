@@ -402,9 +402,9 @@ $$
 
 当前 `PROJECT_SUMMARY.md` 中的主模型是 `models.py` 的 `ReferenceWarpNet`，模型入口为 `warp`。
 
-![图6：当前 ReferenceWarpNet / Warp 的结构](figures/fig07_referencewarp_architecture.webp)
+![图6：ReferenceWarpNet / Warp 的多尺度参考帧对齐与置信度融合网络](figures/fig07_referencewarp_architecture.svg)
 
-*图6：当前 ReferenceWarpNet / Warp 的结构*
+*图6：ReferenceWarpNet / Warp 的可编辑 SVG 网络结构示意。两个参考 Key Encoder 共享权重；1/4 与 1/8 尺度估计偏移并对齐前后关键帧特征，Confidence Gate 对参考特征进行门控，Fusion Decoder 预测残差并用于重建当前非关键帧。*
 
 结构要点： 1. 当前退化 No-Key 帧进入 Observation Encoder，得到多尺度观测特征； 2. 前后 Clean Key 通过共享 Key Encoder； 3. 在 1/4 和 1/8 尺度预测 flow/offset； 4. 使用 `grid_sample` 对 Key 特征进行可微分 warp； 5. Confidence Gate 根据局部参考可靠性控制 Key 特征； 6. Fusion Decoder 预测当前帧残差，输出恢复结果。
 
