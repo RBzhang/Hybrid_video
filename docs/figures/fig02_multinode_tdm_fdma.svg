@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 940" role="img" aria-label="多节点数字同频分时与模拟异频分频共享接收机示意图">
+<title>多节点混合视频反向散射：数字 TDMA + 模拟 FDMA</title>
+<defs><marker id="arr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#31445e"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif}</style>
+<rect width="1600" height="940" fill="#ffffff"/>
+<rect x="27" y="19" width="1545" height="87" rx="18" fill="#1d457e"/>
+<text x="800" y="74" font-size="35" fill="#fff" font-weight="750" text-anchor="middle">多节点混合视频反向散射系统：数字同频分时 + 模拟异频分频</text>
+<rect x="31" y="235" width="195" height="230" rx="22" fill="#eaf4ff" stroke="#356db3" stroke-width="2.5"/>
+<text x="128" y="291" font-size="24" fill="#20467c" font-weight="750" text-anchor="middle">单载波激励源</text>
+<text x="128" y="329" font-size="24" fill="#2764a7" font-weight="650" text-anchor="middle">CW：f₀</text>
+<path d="M112 414 L127 356 L143 414 M99 414H157 M111 368 Q85 382 110 399 M144 368 Q170 382 144 399" fill="none" stroke="#2775c9" stroke-width="5"/>
+<path d="M226 356 H267 V220 H307" fill="none" stroke="#316bc1" stroke-width="4.5" marker-end="url(#arr)"/>
+<path d="M267 356 V381 H307" fill="none" stroke="#316bc1" stroke-width="4.5" marker-end="url(#arr)"/>
+<path d="M267 381 V543 H307" fill="none" stroke="#316bc1" stroke-width="4.5" marker-end="url(#arr)"/>
+<text x="266" y="191" font-size="19" fill="#316bc1" font-weight="700" text-anchor="middle">共同激励</text>
+<rect x="307" y="143" width="694" height="145" rx="18" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<rect x="320" y="123" width="125" height="43" rx="10" fill="#3863b9" stroke="#3863b9" stroke-width="2.5"/>
+<text x="382" y="152" font-size="24" fill="#fff" font-weight="750" text-anchor="middle">节点 1</text>
+<rect x="326" y="186" width="126" height="77" rx="10" fill="#fff" stroke="#a9bdcc" stroke-width="2.5"/>
+<circle cx="358" cy="215" r="22" fill="#203f5c"/><circle cx="358" cy="215" r="12" fill="#a6d7ff"/>
+<text x="405" y="220" font-size="18" fill="#172e4c" font-weight="500" text-anchor="middle">摄像头</text>
+<path d="M452 225H477" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="477" y="185" width="144" height="82" rx="10" fill="#e4efff" stroke="#84aaca" stroke-width="2.5"/>
+<text x="549" y="220" font-size="20" fill="#163c68" font-weight="650" text-anchor="middle">本地控制</text>
+<text x="549" y="249" font-size="17" fill="#38638c" font-weight="500" text-anchor="middle">分配模式</text>
+<path d="M621 225H649" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="649" y="171" width="296" height="109" rx="10" fill="#fff" stroke="#b0bfd1" stroke-width="2.5"/>
+<rect x="662" y="184" width="267" height="35" rx="7" fill="#f2eafd" stroke="#8963ce" stroke-width="2.5"/>
+<text x="796" y="208" font-size="18" fill="#6d48b6" font-weight="700" text-anchor="middle">少量数字 Key（TDM）</text>
+<rect x="662" y="228" width="267" height="35" rx="7" fill="#e9f9e8" stroke="#67ab71" stroke-width="2.5"/>
+<text x="796" y="253" font-size="18" fill="#2b854b" font-weight="700" text-anchor="middle">模拟视频：子带 fA1</text>
+<path d="M946 223H982" fill="none" stroke="#4b6d8c" stroke-width="2.5" />
+<path d="M977 196v54 m-14 -44 l14 -15 l14 15" fill="none" stroke="#34506b" stroke-width="3"/>
+<path d="M1001 219 Q1047 219,1094 382" fill="none" stroke="#dd7a25" stroke-width="4" marker-end="url(#arr)"/>
+<rect x="307" y="305" width="694" height="145" rx="18" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<rect x="320" y="285" width="125" height="43" rx="10" fill="#d28232" stroke="#d28232" stroke-width="2.5"/>
+<text x="382" y="314" font-size="24" fill="#fff" font-weight="750" text-anchor="middle">节点 2</text>
+<rect x="326" y="348" width="126" height="77" rx="10" fill="#fff" stroke="#a9bdcc" stroke-width="2.5"/>
+<circle cx="358" cy="377" r="22" fill="#203f5c"/><circle cx="358" cy="377" r="12" fill="#a6d7ff"/>
+<text x="405" y="382" font-size="18" fill="#172e4c" font-weight="500" text-anchor="middle">摄像头</text>
+<path d="M452 387H477" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="477" y="347" width="144" height="82" rx="10" fill="#e4efff" stroke="#84aaca" stroke-width="2.5"/>
+<text x="549" y="382" font-size="20" fill="#163c68" font-weight="650" text-anchor="middle">本地控制</text>
+<text x="549" y="411" font-size="17" fill="#38638c" font-weight="500" text-anchor="middle">分配模式</text>
+<path d="M621 387H649" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="649" y="333" width="296" height="109" rx="10" fill="#fff" stroke="#b0bfd1" stroke-width="2.5"/>
+<rect x="662" y="346" width="267" height="35" rx="7" fill="#f2eafd" stroke="#8963ce" stroke-width="2.5"/>
+<text x="796" y="370" font-size="18" fill="#6d48b6" font-weight="700" text-anchor="middle">少量数字 Key（TDM）</text>
+<rect x="662" y="390" width="267" height="35" rx="7" fill="#e9f9e8" stroke="#67ab71" stroke-width="2.5"/>
+<text x="796" y="415" font-size="18" fill="#2b854b" font-weight="700" text-anchor="middle">模拟视频：子带 fA2</text>
+<path d="M946 385H982" fill="none" stroke="#4b6d8c" stroke-width="2.5" />
+<path d="M977 358v54 m-14 -44 l14 -15 l14 15" fill="none" stroke="#34506b" stroke-width="3"/>
+<path d="M1001 381 Q1047 381,1094 382" fill="none" stroke="#dd7a25" stroke-width="4" marker-end="url(#arr)"/>
+<rect x="307" y="467" width="694" height="145" rx="18" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<rect x="320" y="447" width="125" height="43" rx="10" fill="#348c5f" stroke="#348c5f" stroke-width="2.5"/>
+<text x="382" y="476" font-size="24" fill="#fff" font-weight="750" text-anchor="middle">节点 3</text>
+<rect x="326" y="510" width="126" height="77" rx="10" fill="#fff" stroke="#a9bdcc" stroke-width="2.5"/>
+<circle cx="358" cy="539" r="22" fill="#203f5c"/><circle cx="358" cy="539" r="12" fill="#a6d7ff"/>
+<text x="405" y="544" font-size="18" fill="#172e4c" font-weight="500" text-anchor="middle">摄像头</text>
+<path d="M452 549H477" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="477" y="509" width="144" height="82" rx="10" fill="#e4efff" stroke="#84aaca" stroke-width="2.5"/>
+<text x="549" y="544" font-size="20" fill="#163c68" font-weight="650" text-anchor="middle">本地控制</text>
+<text x="549" y="573" font-size="17" fill="#38638c" font-weight="500" text-anchor="middle">分配模式</text>
+<path d="M621 549H649" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="649" y="495" width="296" height="109" rx="10" fill="#fff" stroke="#b0bfd1" stroke-width="2.5"/>
+<rect x="662" y="508" width="267" height="35" rx="7" fill="#f2eafd" stroke="#8963ce" stroke-width="2.5"/>
+<text x="796" y="532" font-size="18" fill="#6d48b6" font-weight="700" text-anchor="middle">少量数字 Key（TDM）</text>
+<rect x="662" y="552" width="267" height="35" rx="7" fill="#e9f9e8" stroke="#67ab71" stroke-width="2.5"/>
+<text x="796" y="577" font-size="18" fill="#2b854b" font-weight="700" text-anchor="middle">模拟视频：子带 fA3</text>
+<path d="M946 547H982" fill="none" stroke="#4b6d8c" stroke-width="2.5" />
+<path d="M977 520v54 m-14 -44 l14 -15 l14 15" fill="none" stroke="#34506b" stroke-width="3"/>
+<path d="M1001 543 Q1047 543,1094 382" fill="none" stroke="#dd7a25" stroke-width="4" marker-end="url(#arr)"/>
+<rect x="1098" y="139" width="473" height="479" rx="22" fill="#f0f7ff" stroke="#244b80" stroke-width="2.5"/>
+<rect x="1190" y="117" width="289" height="49" rx="12" fill="#1d457e" stroke="#1d457e" stroke-width="2.5"/>
+<text x="1334" y="151" font-size="27" fill="#fff" font-weight="750" text-anchor="middle">共享接收机</text>
+<rect x="1125" y="194" width="420" height="65" rx="11" fill="#e1eeff" stroke="#89accb" stroke-width="2.5"/>
+<text x="1335" y="232" font-size="21" fill="#18416c" font-weight="700" text-anchor="middle">统一 RF 接收与数字化</text>
+<path d="M1335 259V280 H1220V295" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<path d="M1335 280H1463V295" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<rect x="1122" y="295" width="210" height="95" rx="10" fill="#efe4ff" stroke="#8e67c8" stroke-width="2.5"/>
+<text x="1227" y="333" font-size="19" fill="#61389f" font-weight="750" text-anchor="middle">数字 TDM 支路</text>
+<text x="1227" y="367" font-size="17" fill="#61389f" font-weight="500" text-anchor="middle">按时隙恢复 Key</text>
+<rect x="1354" y="295" width="194" height="95" rx="10" fill="#e2f6e4" stroke="#5dad78" stroke-width="2.5"/>
+<text x="1451" y="333" font-size="19" fill="#247446" font-weight="750" text-anchor="middle">模拟 FDM 支路</text>
+<text x="1451" y="367" font-size="17" fill="#247446" font-weight="500" text-anchor="middle">按子带解调</text>
+<path d="M1227 390V417H1335V443" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<path d="M1451 390V417H1335" fill="none" stroke="#263c59" stroke-width="2.8" />
+<rect x="1217" y="443" width="235" height="55" rx="10" fill="#fff" stroke="#7c99bd" stroke-width="2.5"/>
+<text x="1335" y="478" font-size="20" fill="#1b4877" font-weight="700" text-anchor="middle">联合视频重建 / 播放</text>
+<path d="M1335 498V511" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<rect x="1185" y="516" width="301" height="78" rx="9" fill="#132a42" stroke="#0b2342" stroke-width="2.5"/>
+<rect x="1197" y="529" width="87" height="51" rx="4" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<text x="1240" y="552" font-size="17" fill="#3863b9" font-weight="750" text-anchor="middle">节点 1</text>
+<rect x="1292" y="529" width="87" height="51" rx="4" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<text x="1335" y="552" font-size="17" fill="#d28232" font-weight="750" text-anchor="middle">节点 2</text>
+<rect x="1387" y="529" width="87" height="51" rx="4" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<text x="1430" y="552" font-size="17" fill="#348c5f" font-weight="750" text-anchor="middle">节点 3</text>
+<text x="1335" y="612" font-size="16" fill="#456079" font-weight="500" text-anchor="middle">同一个接收机接收三个不同节点</text>
+<rect x="29" y="642" width="740" height="273" rx="19" fill="#fff" stroke="#8e6bc5" stroke-width="2.5"/>
+<rect x="29" y="642" width="740" height="49" rx="13" fill="#7548b4" stroke="#7548b4" stroke-width="2.5"/>
+<text x="398" y="674" font-size="25" fill="#fff" font-weight="750" text-anchor="middle">数字：共享同一频带，按时间片发送（TDM）</text>
+<text x="181" y="733" font-size="20" fill="#6840a1" font-weight="700" text-anchor="middle">数字共享频带 fD</text>
+<path d="M81 841H717" fill="none" stroke="#3b4d66" stroke-width="2.5" marker-end="url(#arr)"/>
+<rect x="172" y="778" width="52" height="62" rx="4" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<text x="198" y="769" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">N1</text>
+<rect x="256" y="778" width="52" height="62" rx="4" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<text x="282" y="769" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">N2</text>
+<rect x="340" y="778" width="52" height="62" rx="4" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<text x="366" y="769" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">N3</text>
+<rect x="424" y="778" width="52" height="62" rx="4" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<text x="450" y="769" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">N1</text>
+<rect x="508" y="778" width="52" height="62" rx="4" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<text x="534" y="769" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">N2</text>
+<rect x="592" y="778" width="52" height="62" rx="4" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<text x="618" y="769" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">N3</text>
+<text x="690" y="878" font-size="17" fill="#172e4c" font-weight="500" text-anchor="middle">时间 t</text>
+<text x="398" y="905" font-size="18" fill="#75529e" font-weight="600" text-anchor="middle">数字突发较短：N1 → N2 → N3 依次使用同一数字频带</text>
+<rect x="790" y="642" width="779" height="273" rx="19" fill="#fff" stroke="#57a379" stroke-width="2.5"/>
+<rect x="790" y="642" width="779" height="49" rx="13" fill="#288a59" stroke="#288a59" stroke-width="2.5"/>
+<text x="1179" y="674" font-size="25" fill="#fff" font-weight="750" text-anchor="middle">模拟：各占一个窄子带，频分复用（FDM）</text>
+<path d="M833 841H1514" fill="none" stroke="#3b4d66" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M861 840 Q879 833 891 774 Q897 749 903 774 Q915 833 933 840Z" fill="#eef2ff" stroke="#3863b9" stroke-width="3"/>
+<text x="897" y="765" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">N1</text>
+<text x="897" y="867" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">fA1</text>
+<path d="M976 840 Q994 833 1006 774 Q1012 749 1018 774 Q1030 833 1048 840Z" fill="#fff2e7" stroke="#d28232" stroke-width="3"/>
+<text x="1012" y="765" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">N2</text>
+<text x="1012" y="867" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">fA2</text>
+<path d="M1091 840 Q1109 833 1121 774 Q1127 749 1133 774 Q1145 833 1163 840Z" fill="#e8f7ed" stroke="#348c5f" stroke-width="3"/>
+<text x="1127" y="765" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">N3</text>
+<text x="1127" y="867" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">fA3</text>
+<rect x="1260" y="760" width="38" height="79" rx="4" fill="#edf0f5" stroke="#98a9b9" stroke-width="2.5"/>
+<text x="1279" y="747" font-size="15" fill="#607287" font-weight="500" text-anchor="middle">保护带</text>
+<rect x="1336" y="773" width="163" height="65" rx="7" fill="#ece4ff" stroke="#9370c3" stroke-width="2.5"/>
+<text x="1418" y="799" font-size="19" fill="#6941ae" font-weight="700" text-anchor="middle">数字频带 fD</text>
+<text x="1418" y="827" font-size="17" fill="#6941ae" font-weight="500" text-anchor="middle">共频、分时</text>
+<text x="1495" y="876" font-size="17" fill="#172e4c" font-weight="500" text-anchor="middle">频率 f</text>
+<text x="1179" y="905" font-size="18" fill="#2c8357" font-weight="600" text-anchor="middle">模拟、数字占不同频带；多个模拟子带可同时工作</text>
+</svg>
