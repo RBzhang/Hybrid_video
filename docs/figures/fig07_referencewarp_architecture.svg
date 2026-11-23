@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1060" viewBox="0 0 2100 1060" role="img" aria-labelledby="title desc"><title id="title">ReferenceWarpNet：参考帧辅助视频恢复网络结构</title><desc id="desc">两个干净的参考关键帧通过共享权重的 Key Encoder，当前退化非关键帧经过 Observation Encoder；在四分之一和八分之一尺度进行流场及偏移预测，然后使用 grid_sample 将两帧参考特征对齐到当前帧，Confidence Gate 加权并经 Fusion Decoder 预测残差，与当前退化图像相加得到恢复图像。所有形状、连接线及文字均为独立 SVG 矢量对象。</desc><defs>
+<marker id="n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62758e"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2f8b62"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2d68b7"/></marker>
+<marker id="v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#805ecb"/></marker>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#d28b38"/></marker>
+</defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif}</style><rect width="2100" height="1060" fill="#fff"/>
+<rect x="65" y="41" width="190" height="32" rx="16" fill="#ebf2fa" stroke="#ebf2fa" stroke-width="1"/>
+<text x="160" y="63" text-anchor="middle" font-size="16" font-weight="700" fill="#366196">NETWORK OVERVIEW</text>
+<text x="65" y="120" text-anchor="start" font-size="49" font-weight="760" fill="#142b4b">ReferenceWarpNet</text>
+<text x="625" y="120" text-anchor="start" font-size="35" font-weight="650" fill="#4f6682">参考关键帧辅助视频恢复网络</text>
+<text x="68" y="157" text-anchor="start" font-size="18" font-weight="450" fill="#72849b">Multi-scale alignment  /  Confidence-gated fusion  /  Residual reconstruction</text>
+<path d="M65 179 H2035" fill="none" stroke="#e4eaf2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="72" y="207" width="208" height="32" rx="16" fill="#f2f5f9" stroke="#f2f5f9" stroke-width="1"/>
+<text x="176" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#455b76">01  输入帧</text>
+<rect x="363" y="207" width="235" height="32" rx="16" fill="#eaf2ff" stroke="#eaf2ff" stroke-width="1"/>
+<text x="480.5" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#2862a7">02  特征编码</text>
+<rect x="706" y="207" width="367" height="32" rx="16" fill="#f4efff" stroke="#f4efff" stroke-width="1"/>
+<text x="889.5" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#734fc1">03  多尺度对齐</text>
+<rect x="1208" y="207" width="525" height="32" rx="16" fill="#fff4df" stroke="#fff4df" stroke-width="1"/>
+<text x="1470.5" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#977026">04  参考门控与融合</text>
+<rect x="1800" y="207" width="236" height="32" rx="16" fill="#edf4fb" stroke="#edf4fb" stroke-width="1"/>
+<text x="1918" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#42668b">05  重建输出</text>
+<rect x="63" y="263" width="228" height="531" rx="20" fill="#fafcff" stroke="#e8edf3" stroke-width="1.5"/>
+<rect x="339" y="263" width="278" height="531" rx="20" fill="#fafffd" stroke="#e4f1e8" stroke-width="1.5"/>
+<rect x="681" y="263" width="423" height="531" rx="20" fill="#fcfaff" stroke="#ece5fa" stroke-width="1.5"/>
+<rect x="1179" y="263" width="594" height="531" rx="20" fill="#fffdf9" stroke="#f2eadc" stroke-width="1.5"/>
+<rect x="1790" y="263" width="248" height="531" rx="20" fill="#fbfdff" stroke="#e8eef5" stroke-width="1.5"/>
+<rect x="84" y="256" width="185" height="143" rx="12" fill="#fff" stroke="#dce4ee" stroke-width="1.5"/>
+<text x="176" y="285" text-anchor="middle" font-size="19" font-weight="650" fill="#32465e">前一关键帧</text>
+<rect x="100" y="299" width="152" height="73" rx="5" fill="#e8edf2" stroke="#c7d0da" stroke-width="1"/>
+<path d="M102 356 L125 332 L144 344 L177 317 L204 349 L227 333 L251 359 V371 H102 Z" fill="none" stroke="#aebcc9" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102 356 L125 332 L144 344 L177 317 L204 349 L227 333 L251 359 V371 H102 Z" fill="#bcc8d3"/>
+<circle cx="224" cy="324" r="9" fill="#fff"/>
+<text x="176" y="392" text-anchor="middle" font-size="23" font-weight="700" fill="#273f5c">Kₜ₋₁</text>
+<rect x="84" y="456" width="185" height="143" rx="12" fill="#fff" stroke="#dce4ee" stroke-width="1.5"/>
+<text x="176" y="485" text-anchor="middle" font-size="19" font-weight="650" fill="#32465e">当前退化帧</text>
+<rect x="100" y="499" width="152" height="73" rx="5" fill="#e8edf2" stroke="#c7d0da" stroke-width="1"/>
+<path d="M102 556 L125 532 L144 544 L177 517 L204 549 L227 533 L251 559 V571 H102 Z" fill="none" stroke="#aebcc9" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102 556 L125 532 L144 544 L177 517 L204 549 L227 533 L251 559 V571 H102 Z" fill="#bcc8d3"/>
+<circle cx="224" cy="524" r="9" fill="#fff"/>
+<rect x="100" y="499" width="152" height="73" rx="5" fill="#8ea4bc" stroke="#8ea4bc" stroke-width="0"/>
+<rect x="100" y="499" width="152" height="73" rx="5" fill="#fff" opacity=".38"/>
+<text x="176" y="592" text-anchor="middle" font-size="23" font-weight="700" fill="#273f5c">Iₜ</text>
+<rect x="84" y="656" width="185" height="143" rx="12" fill="#fff" stroke="#dce4ee" stroke-width="1.5"/>
+<text x="176" y="685" text-anchor="middle" font-size="19" font-weight="650" fill="#32465e">后一关键帧</text>
+<rect x="100" y="699" width="152" height="73" rx="5" fill="#e8edf2" stroke="#c7d0da" stroke-width="1"/>
+<path d="M102 756 L125 732 L144 744 L177 717 L204 749 L227 733 L251 759 V771 H102 Z" fill="none" stroke="#aebcc9" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102 756 L125 732 L144 744 L177 717 L204 749 L227 733 L251 759 V771 H102 Z" fill="#bcc8d3"/>
+<circle cx="224" cy="724" r="9" fill="#fff"/>
+<text x="176" y="792" text-anchor="middle" font-size="23" font-weight="700" fill="#273f5c">Kₜ₊₁</text>
+<rect x="366" y="263" width="223" height="112" rx="15" fill="#e7f7ed" stroke="#a6d8bd" stroke-width="2"/>
+<rect x="369" y="266" width="7" height="106" rx="3" fill="#2f8b62" stroke="#2f8b62" stroke-width="0"/>
+<text x="478" y="308" text-anchor="middle" font-size="21" font-weight="730" fill="#235b42">Key Encoder</text>
+<text x="478" y="336" text-anchor="middle" font-size="17" font-weight="500" fill="#548971">多尺度 Key 特征</text>
+<rect x="408" y="345" width="137" height="32" rx="16" fill="#d1eadc" stroke="#d1eadc" stroke-width="1"/>
+<text x="476.5" y="367" text-anchor="middle" font-size="16" font-weight="700" fill="#2b7a54">共享权重 θK</text>
+<rect x="366" y="463" width="223" height="112" rx="15" fill="#eaf3ff" stroke="#9ac1ef" stroke-width="2"/>
+<rect x="369" y="466" width="7" height="106" rx="3" fill="#2d68b7" stroke="#2d68b7" stroke-width="0"/>
+<text x="478" y="508" text-anchor="middle" font-size="21" font-weight="730" fill="#25476f">Observation Encoder</text>
+<text x="478" y="536" text-anchor="middle" font-size="17" font-weight="500" fill="#587a9e">多尺度观测特征</text>
+<rect x="408" y="545" width="137" height="32" rx="16" fill="#d5e8fe" stroke="#d5e8fe" stroke-width="1"/>
+<text x="476.5" y="567" text-anchor="middle" font-size="16" font-weight="700" fill="#366fae">当前帧特征</text>
+<rect x="366" y="663" width="223" height="112" rx="15" fill="#e7f7ed" stroke="#a6d8bd" stroke-width="2"/>
+<rect x="369" y="666" width="7" height="106" rx="3" fill="#2f8b62" stroke="#2f8b62" stroke-width="0"/>
+<text x="478" y="708" text-anchor="middle" font-size="21" font-weight="730" fill="#235b42">Key Encoder</text>
+<text x="478" y="736" text-anchor="middle" font-size="17" font-weight="500" fill="#548971">多尺度 Key 特征</text>
+<rect x="408" y="745" width="137" height="32" rx="16" fill="#d1eadc" stroke="#d1eadc" stroke-width="1"/>
+<text x="476.5" y="767" text-anchor="middle" font-size="16" font-weight="700" fill="#2b7a54">共享权重 θK</text>
+<path d="M269 324 H357" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M269 524 H357" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M269 724 H357" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<rect x="709" y="264" width="355" height="122" rx="15" fill="#fff9ef" stroke="#e7cfa5" stroke-width="2.2"/>
+<text x="887" y="301" text-anchor="middle" font-size="22" font-weight="750" fill="#815516">Differentiable Warping</text>
+<text x="887" y="335" text-anchor="middle" font-size="20" font-weight="650" fill="#845b25">前一关键帧特征对齐</text>
+<path d="M755 347 H1018" fill="none" stroke="#e9d8bb" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="887" y="372" text-anchor="middle" font-size="17" font-weight="500" fill="#9b815d">grid_sample  ·  align to Iₜ</text>
+<rect x="709" y="657" width="355" height="122" rx="15" fill="#fff9ef" stroke="#e7cfa5" stroke-width="2.2"/>
+<text x="887" y="694" text-anchor="middle" font-size="22" font-weight="750" fill="#815516">Differentiable Warping</text>
+<text x="887" y="728" text-anchor="middle" font-size="20" font-weight="650" fill="#845b25">后一关键帧特征对齐</text>
+<path d="M755 740 H1018" fill="none" stroke="#e9d8bb" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="887" y="765" text-anchor="middle" font-size="17" font-weight="500" fill="#9b815d">grid_sample  ·  align to Iₜ</text>
+<rect x="709" y="446" width="355" height="156" rx="15" fill="#f4eeff" stroke="#d6c8f4" stroke-width="2.2"/>
+<text x="887" y="478" text-anchor="middle" font-size="23" font-weight="750" fill="#6842a7">Flow / Offset Estimation</text>
+<text x="887" y="500" text-anchor="middle" font-size="16" font-weight="450" fill="#8c76ac">基于观测与参考特征估计位移</text>
+<rect x="739" y="518" width="144" height="58" rx="11" fill="#fff" stroke="#c4b4eb" stroke-width="1.7"/>
+<text x="811" y="541" text-anchor="middle" font-size="19" font-weight="700" fill="#6744a0">1/4 scale</text>
+<text x="811" y="562" text-anchor="middle" font-size="15" font-weight="500" fill="#8671a1">Flow / Offset</text>
+<rect x="895" y="518" width="144" height="58" rx="11" fill="#fff" stroke="#c4b4eb" stroke-width="1.7"/>
+<text x="967" y="541" text-anchor="middle" font-size="19" font-weight="700" fill="#6744a0">1/8 scale</text>
+<text x="967" y="562" text-anchor="middle" font-size="15" font-weight="500" fill="#8671a1">Flow / Offset</text>
+<path d="M590 324 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M590 724 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M641 324 V481 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M641 724 V568 H701" fill="none" stroke="green" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M590 524 H701" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M869 446 V392 H868 V386" fill="none" stroke="violet" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<path d="M920 602 V648 H914 V657" fill="none" stroke="violet" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<text x="1040" y="411" text-anchor="middle" font-size="14" font-weight="600" fill="#8566b5">1/4 · 1/8</text>
+<text x="1040" y="635" text-anchor="middle" font-size="14" font-weight="600" fill="#8566b5">1/4 · 1/8</text>
+<path d="M1064 326 H1139 V489 H1198" fill="none" stroke="amber" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M1064 719 H1139 V548 H1198" fill="none" stroke="amber" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<rect x="1206" y="441" width="230" height="167" rx="16" fill="#fff6e3" stroke="#efd59b" stroke-width="2.2"/>
+<rect x="1224" y="457" width="80" height="32" rx="16" fill="#ffe8b7" stroke="#ffe8b7" stroke-width="1"/>
+<text x="1264" y="479" text-anchor="middle" font-size="16" font-weight="700" fill="#9b7425">GATE</text>
+<text x="1321" y="518" text-anchor="middle" font-size="23" font-weight="750" fill="#785822">Confidence Gate</text>
+<text x="1321" y="551" text-anchor="middle" font-size="17" font-weight="500" fill="#987e55">局部参考可信度评估</text>
+<text x="1321" y="575" text-anchor="middle" font-size="16" font-weight="500" fill="#987e55">自适应加权 Key 特征</text>
+<rect x="1519" y="441" width="226" height="167" rx="16" fill="#fff0ef" stroke="#efbcbc" stroke-width="2.2"/>
+<rect x="1538" y="457" width="80" height="32" rx="16" fill="#ffe0de" stroke="#ffe0de" stroke-width="1"/>
+<text x="1578" y="479" text-anchor="middle" font-size="16" font-weight="700" fill="#af5757">FUSE</text>
+<text x="1632" y="518" text-anchor="middle" font-size="23" font-weight="750" fill="#9a3d44">Fusion Decoder</text>
+<text x="1632" y="551" text-anchor="middle" font-size="16" font-weight="500" fill="#b16e70">融合观测与对齐特征</text>
+<text x="1632" y="576" text-anchor="middle" font-size="16" font-weight="500" fill="#b16e70">预测当前帧残差 ΔIₜ</text>
+<path d="M1436 524 H1510" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M590 514 H668 V710" fill="none" stroke="#2d68b7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M668 710 Q684 724 668 739" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M668 710 Q684 724 668 739" fill="none" stroke="#2d68b7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M668 739 V822 H1634 V612" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<rect x="995" y="806" width="215" height="32" rx="16" fill="#e7f0ff" stroke="#e7f0ff" stroke-width="1"/>
+<text x="1102.5" y="828" text-anchor="middle" font-size="16" font-weight="700" fill="#2d68b7">Observation features</text>
+<rect x="1805" y="279" width="211" height="497" rx="17" fill="#fff" stroke="#dbe3ec" stroke-width="2"/>
+<text x="1910" y="316" text-anchor="middle" font-size="22" font-weight="750" fill="#28466b">Restoration</text>
+<path d="M1829 335 H1991" fill="none" stroke="#e3e9f1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1829" y="358" width="163" height="76" rx="11" fill="#f5f7fb" stroke="#d2dce8" stroke-width="1.4"/>
+<text x="1910" y="390" text-anchor="middle" font-size="20" font-weight="700" fill="#47627d">Residual</text>
+<text x="1910" y="414" text-anchor="middle" font-size="22" font-weight="750" fill="#48647d">ΔIₜ</text>
+<path d="M1745 524 H1780 V395 H1821" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M1910 434 V467" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<circle cx="1910" cy="496" r="27" fill="#eaf3ff" stroke="#9bb9df" stroke-width="2"/>
+<text x="1910" y="506" text-anchor="middle" font-size="31" font-weight="750" fill="#3168ac">+</text>
+<text x="1990" y="489" text-anchor="middle" font-size="19" font-weight="650" fill="#2d68b7">Iₜ</text>
+<path d="M1970 495 H1940" fill="none" stroke="blue" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<text x="1910" y="558" text-anchor="middle" font-size="21" font-weight="750" fill="#284c76">Îₜ = Iₜ + ΔIₜ</text>
+<path d="M1910 572 V603" fill="none" stroke="grey" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<rect x="1833" y="606" width="155" height="92" rx="8" fill="#e8f2f5" stroke="#adbfce" stroke-width="1.5"/>
+<path d="M1835 675 L1859 648 L1877 659 L1912 625 L1938 658 L1960 645 L1986 674 V697 H1835 Z" fill="#a4bcc0"/>
+<circle cx="1963" cy="630" r="8" fill="#fff"/>
+<text x="1910" y="731" text-anchor="middle" font-size="18" font-weight="600" fill="#3c5874">恢复当前非关键帧</text>
+<text x="1910" y="758" text-anchor="middle" font-size="16" font-weight="500" fill="#7087a2">Restored No-Key</text>
+<rect x="65" y="861" width="1971" height="130" rx="17" fill="#f8fafc" stroke="#e8eef5" stroke-width="1.5"/>
+<text x="101" y="899" text-anchor="start" font-size="19" font-weight="720" fill="#34465c">数据流</text>
+<path d="M206 894 H281" fill="none" stroke="#2f8b62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<text x="296" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Key reference</text>
+<path d="M581 894 H656" fill="none" stroke="#2d68b7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<text x="671" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Observation</text>
+<path d="M938 894 H1013" fill="none" stroke="#805ecb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<text x="1028" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Flow / Offset</text>
+<path d="M1307 894 H1382" fill="none" stroke="#d28b38" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<text x="1397" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Warped features</text>
+<path d="M101 928 H1996" fill="none" stroke="#e5eaf1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="102" y="963" text-anchor="start" font-size="19" font-weight="430" fill="#617289">Key Encoder 两个实例共享参数 θK；1/4 和 1/8 尺度执行偏移估计及参考特征对齐；残差 ΔIₜ 与观测 Iₜ 相加得到恢复结果。</text>
+<text x="1037" y="1030" text-anchor="middle" font-size="16" font-weight="620" fill="#9ca9b8">FIGURE  •  REFERENCE-GUIDED MULTI-SCALE VIDEO RESTORATION</text>
+</svg>
