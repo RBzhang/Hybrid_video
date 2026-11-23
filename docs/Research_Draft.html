@@ -333,7 +333,279 @@ MHz</strong>，节省约 <strong>72.8%</strong>。</li>
 其中最关键的前提是：模拟链路实际 99% OBW 能达到 20
 kHz/node，并且频移结构能够实现节点间分离。</p>
 <figure>
-<img src="figures/fig01_hybrid_video_node.svg" alt="图1：单节点混合数字–模拟视频反向散射链路" loading="lazy" />
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2100" height="1400" viewBox="0 0 2100 1400" role="img" aria-labelledby="title desc">
+<title id="title">混合模拟-数字视频反向散射通信系统结构图</title>
+<desc id="desc">单载波激励反向散射标签，低功耗摄像头的视频按模式分为大部分模拟视频与少量数字数据，模拟模式DAC驱动变容二极管、RF开关保持静态；数字模式DAC关闭，数字信息控制移频RF开关，在不同于模拟视频的频带上传输。接收端选频解调并融合恢复视频。</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FBFDFF"/><stop offset="1" stop-color="#F0F6FC"/></linearGradient>
+  <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.15" fill="#D2E0EC" opacity=".6"/></pattern>
+  <linearGradient id="screenSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#69C8F8"/><stop offset="1" stop-color="#CCEFFF"/></linearGradient>
+  <linearGradient id="screenGrass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#66BBA0"/><stop offset="1" stop-color="#258F77"/></linearGradient>
+  <filter id="shadow" x="-12%" y="-12%" width="130%" height="145%"><feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur"/><feOffset in="blur" dy="5" result="offset"/><feComponentTransfer in="offset" result="faded"><feFuncA type="linear" slope=".12"/></feComponentTransfer><feMerge><feMergeNode in="faded"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <marker id="blue" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9" fill="none" stroke="#277CE2" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="amber" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9" fill="none" stroke="#E18B45" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="teal" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9" fill="none" stroke="#12A78C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="purple" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9" fill="none" stroke="#8062D5" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <symbol id="scene" viewBox="0 0 320 185">
+    <rect width="320" height="185" fill="url(#screenSky)"/>
+    <circle cx="256" cy="39" r="20" fill="#FFE7A2"/>
+    <ellipse cx="255" cy="40" rx="34" ry="29" fill="#FFF8D8" opacity=".24"/>
+    <path d="M0 118 Q55 45 125 124 Q187 54 255 122 Q292 88 320 109 L320 185 L0 185Z" fill="#87C4BD"/>
+    <path d="M0 149 Q63 115 122 153 Q193 122 242 151 Q281 125 320 142 L320 185 L0 185Z" fill="#399A86"/>
+    <path d="M0 158 Q95 146 165 171 Q242 136 320 167 L320 185 L0 185Z" fill="url(#screenGrass)"/>
+    <path d="M143 153 L143 100 L207 100 L207 153Z" fill="#FFF5D8"/>
+    <path d="M132 100 L175 69 L218 100Z" fill="#DD7966"/>
+    <rect x="171" y="115" width="18" height="38" fill="#B27568" rx="2"/>
+    <rect x="151" y="115" width="14" height="15" fill="#7EC2DB" stroke="#FFF" stroke-width="2"/>
+    <rect x="194" y="115" width="8" height="15" fill="#7EC2DB" stroke="#FFF" stroke-width="2"/>
+    <path d="M52 147 L52 80" stroke="#6E5B4F" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="52" cy="76" r="33" fill="#419D78"/><circle cx="31" cy="83" r="23" fill="#4FAB7D"/><circle cx="73" cy="89" r="21" fill="#4CA67B"/>
+    <path d="M228 162 Q241 146 252 158 Q265 145 279 163" stroke="#CCE8A2" stroke-width="4" fill="none"/>
+  </symbol>
+  <style>text {font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif} .sub{fill:#688099;font-size:18px} .tiny{fill:#758BA2;font-size:15px}</style>
+</defs>
+<rect x="0" y="0" width="2100" height="1400" rx="0" fill="url(#bg)" stroke="none" stroke-width="1" />
+<rect x="0" y="0" width="2100" height="1400" rx="0" fill="url(#dots)" stroke="none" stroke-width="1" />
+<path d="M0 142 L2100 142" fill="none" stroke="#D9E5F0" stroke-width="2" stroke-linecap="round" />
+<rect x="72" y="41" width="7" height="68" rx="3" fill="#2D80DF" stroke="none" stroke-width="1" />
+<text x="98" y="77" fill="#18304C" font-size="37" font-weight="800" >混合模拟 / 数字视频反向散射通信系统</text>
+<text x="100" y="113" fill="#617891" font-size="18" font-weight="500" >CW 单载波激励   ·   变容二极管模拟调制   ·   RF 开关数字移频调制   ·   分频带传输与接收端重构</text>
+<rect x="1647" y="54" width="380" height="52" rx="17" fill="white" stroke="#DCE7F2" stroke-width="1" />
+<circle cx="1676" cy="80" r="7" fill="#277CE2" stroke="none" stroke-width="1"/>
+<text x="1695" y="87" fill="#5A7188" font-size="17" font-weight="650" >入射 CW</text>
+<circle cx="1820" cy="80" r="7" fill="#12A78C" stroke="none" stroke-width="1"/>
+<text x="1839" y="87" fill="#5A7188" font-size="17" font-weight="650" >模拟</text>
+<circle cx="1926" cy="80" r="7" fill="#8062D5" stroke="none" stroke-width="1"/>
+<text x="1945" y="87" fill="#5A7188" font-size="17" font-weight="650" >数字</text>
+<path d="M501 392 C560 344 617 346 667 391" fill="none" stroke="#8DC4F9" stroke-width="27" stroke-linecap="round" stroke-linejoin="round" opacity=".27"/>
+<path d="M501 392 C560 358 620 357 667 391" fill="none" stroke="#277CE2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)" />
+<rect x="539" y="307" width="105" height="53" rx="14" fill="white" stroke="#D7E6F3" stroke-width="1" />
+<text x="591" y="329" fill="#2E73C6" font-size="16" font-weight="750" text-anchor="middle" >入射单载波</text>
+<text x="591" y="349" fill="#2E73C6" font-size="18" font-weight="750" text-anchor="middle" >f0</text>
+<path d="M1480 391 C1540 351 1590 354 1640 391" fill="none" stroke="#F4C898" stroke-width="27" stroke-linecap="round" stroke-linejoin="round" opacity=".28"/>
+<path d="M1480 392 C1540 358 1592 359 1640 391" fill="none" stroke="#E18B45" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#amber)" />
+<rect x="1516" y="308" width="109" height="55" rx="14" fill="white" stroke="#F4DCC5" stroke-width="1" />
+<text x="1571" y="331" fill="#C47937" font-size="16" font-weight="750" text-anchor="middle" >散射视频</text>
+<text x="1571" y="352" fill="#C47937" font-size="14" font-weight="700" text-anchor="middle" >模拟 + 数字</text>
+<rect x="64" y="181" width="429" height="443" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="89" y="210" width="40" height="32" rx="10" fill="#E3F1FF" stroke="none" stroke-width="1" />
+<text x="109" y="233" fill="#156FBD" font-size="17" font-weight="800" text-anchor="middle" >01</text>
+<text x="145" y="235" fill="#193755" font-size="24" font-weight="800" >单载波激励源</text>
+<path d="M92 264 L462 264" fill="none" stroke="#D9E5F0" stroke-width="2" stroke-linecap="round" />
+<text x="94" y="299" fill="#6B7E91" font-size="18" font-weight="500" >连续波（CW）发射</text>
+<rect x="98" y="319" width="257" height="171" rx="18" fill="#F8FBFF" stroke="#C6DAEA" stroke-width="2" />
+<rect x="115" y="335" width="222" height="110" rx="12" fill="#193252" stroke="none" stroke-width="1" />
+<polyline points="126.0,390.0 127.4,385.9 128.7,381.9 130.1,378.1 131.5,374.6 132.8,371.3 134.2,368.5 135.6,366.1 137.0,364.2 138.3,362.9 139.7,362.2 141.1,362.0 142.4,362.5 143.8,363.5 145.2,365.1 146.6,367.2 147.9,369.8 149.3,372.9 150.7,376.3 152.0,380.0 153.4,383.9 154.8,388.0 156.1,392.0 157.5,396.1 158.9,400.0 160.2,403.7 161.6,407.1 163.0,410.2 164.4,412.8 165.7,414.9 167.1,416.5 168.5,417.5 169.8,418.0 171.2,417.8 172.6,417.1 173.9,415.8 175.3,413.9 176.7,411.5 178.1,408.7 179.4,405.4 180.8,401.9 182.2,398.1 183.5,394.1 184.9,390.0 186.3,385.9 187.7,381.9 189.0,378.1 190.4,374.6 191.8,371.3 193.1,368.5 194.5,366.1 195.9,364.2 197.2,362.9 198.6,362.2 200.0,362.0 201.4,362.5 202.7,363.5 204.1,365.1 205.5,367.2 206.8,369.8 208.2,372.9 209.6,376.3 210.9,380.0 212.3,383.9 213.7,388.0 215.1,392.0 216.4,396.1 217.8,400.0 219.2,403.7 220.5,407.1 221.9,410.2 223.3,412.8 224.6,414.9 226.0,416.5 227.4,417.5 228.8,418.0 230.1,417.8 231.5,417.1 232.9,415.8 234.2,413.9 235.6,411.5 237.0,408.7 238.3,405.4 239.7,401.9 241.1,398.1 242.4,394.1 243.8,390.0 245.2,385.9 246.6,381.9 247.9,378.1 249.3,374.6 250.7,371.3 252.0,368.5 253.4,366.1 254.8,364.2 256.1,362.9 257.5,362.2 258.9,362.0 260.3,362.5 261.6,363.5 263.0,365.1 264.4,367.2 265.7,369.8 267.1,372.9 268.5,376.3 269.9,380.0 271.2,383.9 272.6,388.0 274.0,392.0 275.3,396.1 276.7,400.0 278.1,403.7 279.4,407.1 280.8,410.2 282.2,412.8 283.6,414.9 284.9,416.5 286.3,417.5 287.7,418.0 289.0,417.8 290.4,417.1 291.8,415.8 293.1,413.9 294.5,411.5 295.9,408.7 297.2,405.4 298.6,401.9 300.0,398.1 301.4,394.1 302.7,390.0 304.1,385.9 305.5,381.9 306.8,378.1 308.2,374.6 309.6,371.3 311.0,368.5 312.3,366.1 313.7,364.2 315.1,362.9 316.4,362.2 317.8,362.0 319.2,362.5 320.5,363.5 321.9,365.1 323.3,367.2" fill="none" stroke="#58C5F9" stroke-width="4" stroke-linecap="round"/>
+<circle cx="145" cy="465" r="8" fill="#49B5D9" stroke="none" stroke-width="1"/>
+<circle cx="184" cy="465" r="8" fill="#BFD7EF" stroke="none" stroke-width="1"/>
+<circle cx="223" cy="465" r="8" fill="#BFD7EF" stroke="none" stroke-width="1"/>
+<path d="M420 410 V336 M405 352 L420 331 L435 352" fill="none" stroke="#31618F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M394 363 Q372 389 394 414 M446 363 Q468 389 446 414" fill="none" stroke="#75BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M405 421 L435 421" fill="none" stroke="#405F7A" stroke-width="4" stroke-linecap="round" />
+<path d="M410 429 L430 429" fill="none" stroke="#405F7A" stroke-width="3" stroke-linecap="round" />
+<text x="97" y="535" fill="#26486A" font-size="20" font-weight="750" >RF 连续波输出</text>
+<text x="97" y="568" fill="#315E90" font-size="23" font-weight="700" >x(t) = A cos(2πf0t)</text>
+<rect x="94" y="584" width="300" height="28" rx="13" fill="#E5F1FD" stroke="none" stroke-width="1" />
+<text x="244.0" y="603.25" fill="#367DB5" font-size="15" font-weight="700" text-anchor="middle" >固定频率 · 无视频信息</text>
+<rect x="683" y="181" width="795" height="443" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="708" y="209" width="40" height="32" rx="10" fill="#E3F1FF" stroke="none" stroke-width="1" />
+<text x="728" y="232" fill="#156FBD" font-size="17" font-weight="800" text-anchor="middle" >02</text>
+<text x="764" y="234" fill="#193755" font-size="24" font-weight="800" >反向散射节点</text>
+<rect x="1258" y="210" width="190" height="32" rx="13" fill="#EAF2FB" stroke="none" stroke-width="1" />
+<text x="1353.0" y="231.6" fill="#446B9B" font-size="16" font-weight="700" text-anchor="middle" >可重构负载 ZL(t)</text>
+<path d="M714 265 L1450 265" fill="none" stroke="#D9E5F0" stroke-width="2" stroke-linecap="round" />
+<rect x="719" y="292" width="725" height="253" rx="17" fill="#F8FAFE" stroke="#D8E5F2" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="744" y="323" fill="#4A6480" font-size="18" font-weight="750" >天线端口与负载控制网络（功能框图）</text>
+<path d="M782 415 V344 M766 366 L782 339 L798 366" fill="none" stroke="#315D83" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M758 360 Q725 387 758 414 M806 360 Q839 387 806 414" fill="none" stroke="#83C4F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M764 424 L799 424" fill="none" stroke="#3B5C7D" stroke-width="4" stroke-linecap="round" />
+<path d="M770 433 L793 433" fill="none" stroke="#3B5C7D" stroke-width="3" stroke-linecap="round" />
+<path d="M784 381 H1413" fill="none" stroke="#456985" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<circle cx="939" cy="381" r="6" fill="#486F91" stroke="none" stroke-width="1"/>
+<circle cx="1090" cy="381" r="6" fill="#486F91" stroke="none" stroke-width="1"/>
+<circle cx="1324" cy="381" r="6" fill="#486F91" stroke="none" stroke-width="1"/>
+<text x="866" y="361" fill="#638099" font-size="15" font-weight="700" >RF</text>
+<path d="M1090 381 L1090 411" fill="none" stroke="#446A88" stroke-width="4" stroke-linecap="round" />
+<path d="M1070 414 L1110 414" fill="none" stroke="#16AF93" stroke-width="4" stroke-linecap="round" />
+<path d="M1070 428 L1110 428" fill="none" stroke="#16AF93" stroke-width="4" stroke-linecap="round" />
+<path d="M1109 437 L1131 409 M1120 409 H1131 V420" fill="none" stroke="#11A78C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M1090 428 L1090 463" fill="none" stroke="#446A88" stroke-width="3.7" stroke-linecap="round" />
+<path d="M1075 463 L1105 463" fill="none" stroke="#446A88" stroke-width="3.2" stroke-linecap="round" />
+<path d="M1080 472 L1100 472" fill="none" stroke="#446A88" stroke-width="3" stroke-linecap="round" />
+<path d="M1085 480 L1095 480" fill="none" stroke="#446A88" stroke-width="3" stroke-linecap="round" />
+<rect x="1000" y="494" width="182" height="29" rx="13" fill="#E3F8F0" stroke="none" stroke-width="1" />
+<text x="1091.0" y="514.1" fill="#098B75" font-size="16" font-weight="700" text-anchor="middle" >变容二极管</text>
+<path d="M1324 381 L1324 410" fill="none" stroke="#446A88" stroke-width="4" stroke-linecap="round" />
+<circle cx="1324" cy="416" r="5" fill="white" stroke="#8466D2" stroke-width="2.7"/>
+<circle cx="1324" cy="452" r="5" fill="white" stroke="#8466D2" stroke-width="2.7"/>
+<path d="M1327 420 L1352 446" fill="none" stroke="#8062D5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M1324 457 L1324 467" fill="none" stroke="#446A88" stroke-width="3.5" stroke-linecap="round" />
+<path d="M1309 470 L1339 470" fill="none" stroke="#446A88" stroke-width="3.2" stroke-linecap="round" />
+<path d="M1314 478 L1334 478" fill="none" stroke="#446A88" stroke-width="3" stroke-linecap="round" />
+<path d="M1319 485 L1329 485" fill="none" stroke="#446A88" stroke-width="3" stroke-linecap="round" />
+<rect x="1236" y="494" width="183" height="29" rx="13" fill="#F0EBFE" stroke="none" stroke-width="1" />
+<text x="1327.5" y="514.1" fill="#7155B8" font-size="16" font-weight="700" text-anchor="middle" >RF 射频开关</text>
+<text x="927" y="528" fill="#098B75" font-size="15" font-weight="650" >模拟控制电压</text>
+<text x="1237" y="528" fill="#765AB8" font-size="15" font-weight="650" >数字移频开关控制</text>
+<rect x="714" y="569" width="353" height="39" rx="13" fill="#DFF7EF" stroke="none" stroke-width="1" />
+<text x="890.5" y="594.1" fill="#068E77" font-size="16" font-weight="700" text-anchor="middle" >模拟模式：DAC 工作 / 开关保持静态</text>
+<rect x="1080" y="569" width="364" height="39" rx="13" fill="#EEE8FD" stroke="none" stroke-width="1" />
+<text x="1262.0" y="594.1" fill="#7152C4" font-size="16" font-weight="700" text-anchor="middle" >数字模式：DAC 关闭 / 开关移频</text>
+<rect x="1653" y="181" width="382" height="443" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="1675" y="210" width="40" height="32" rx="10" fill="#FBECDA" stroke="none" stroke-width="1" />
+<text x="1695" y="233" fill="#B96A2B" font-size="17" font-weight="800" text-anchor="middle" >03</text>
+<text x="1731" y="235" fill="#193755" font-size="24" font-weight="800" >接收机 / 视频恢复</text>
+<path d="M1675 265 L2009 265" fill="none" stroke="#D9E5F0" stroke-width="2" stroke-linecap="round" />
+<rect x="1685" y="306" width="319" height="185" rx="17" fill="#1C3655" stroke="none" stroke-width="1" />
+<rect x="1696" y="318" width="297" height="156" rx="10" fill="#8BD6EF" stroke="none" stroke-width="1" />
+<use href="#scene" x="1696" y="318" width="297" height="156" preserveAspectRatio="xMidYMid slice"/>
+<rect x="1705" y="326" width="99" height="22" rx="11" fill="#163D51" stroke="none" stroke-width="1" opacity=".78"/>
+<circle cx="1717" cy="337" r="4" fill="#51EFB5" stroke="none" stroke-width="1"/>
+<text x="1729" y="342" fill="white" font-size="12" font-weight="800" >LIVE</text>
+<path d="M1799.84 491 L1783.89 504 H1905.11 L1889.16 491Z" fill="#698AA9" stroke="#698AA9" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="1771.13" y="504" width="146.74" height="7" rx="3" fill="#698AA9" stroke="none" stroke-width="1" />
+<rect x="1679" y="546" width="327" height="49" rx="13" fill="#E7F1FC" stroke="none" stroke-width="1" />
+<text x="1842.5" y="576.8" fill="#2A6887" font-size="18" font-weight="700" text-anchor="middle" >选频解调 → 视频重构</text>
+<path d="M75 667 L2035 667" fill="none" stroke="#D9E5F0" stroke-width="2" stroke-linecap="round" />
+<rect x="80" y="650" width="229" height="32" rx="5" fill="#F4F9FD" stroke="none" stroke-width="1" />
+<text x="84" y="674" fill="#385B7D" font-size="21" font-weight="800" >视频数据分流与负载驱动</text>
+<text x="1810" y="676" fill="#7990A4" font-size="17" font-weight="650" >模式互斥 / 时分切换</text>
+<path d="M394 919 H423" fill="none" stroke="#12A78C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#teal)" />
+<path d="M750 783 H788" fill="none" stroke="#12A78C" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#teal)" />
+<path d="M751 1000 H789" fill="none" stroke="#8062D5" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#purple)" />
+<path d="M1129 1006 H1161" fill="none" stroke="#8062D5" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#purple)" />
+<path d="M961 713 V644 H1090 V540" fill="none" stroke="#12A78C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#teal)" />
+<path d="M1504 1002 H1529 V644 H1324 V540" fill="none" stroke="#8062D5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#purple)" />
+<path d="M1338 888 V912" fill="none" stroke="#8062D5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#purple)" />
+<rect x="66" y="711" width="328" height="387" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="85" y="733" width="40" height="32" rx="10" fill="#DFF7F0" stroke="none" stroke-width="1" />
+<text x="105" y="756" fill="#058A76" font-size="17" font-weight="800" text-anchor="middle" >04</text>
+<text x="141" y="758" fill="#193755" font-size="24" font-weight="800" >低功耗摄像头</text>
+<rect x="87" y="802" width="285" height="170" rx="17" fill="#1C3655" stroke="none" stroke-width="1" />
+<rect x="98" y="814" width="263" height="141" rx="10" fill="#8BD6EF" stroke="none" stroke-width="1" />
+<use href="#scene" x="98" y="814" width="263" height="141" preserveAspectRatio="xMidYMid slice"/>
+<rect x="107" y="822" width="99" height="22" rx="11" fill="#163D51" stroke="none" stroke-width="1" opacity=".78"/>
+<circle cx="119" cy="833" r="4" fill="#51EFB5" stroke="none" stroke-width="1"/>
+<text x="131" y="838" fill="white" font-size="12" font-weight="800" >LIVE</text>
+<path d="M189.6 972 L175.35 985 H283.65 L269.4 972Z" fill="#698AA9" stroke="#698AA9" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="163.95" y="985" width="131.1" height="7" rx="3" fill="#698AA9" stroke="none" stroke-width="1" />
+<text x="88" y="1034" fill="#274765" font-size="19" font-weight="740" >采集视频帧 / 像素数据</text>
+<text x="88" y="1067" fill="#788CA0" font-size="15" font-weight="500" >连续采样并输出数字视频数据</text>
+<rect x="423" y="711" width="328" height="387" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="443" y="733" width="40" height="32" rx="10" fill="#E7F2F9" stroke="none" stroke-width="1" />
+<text x="463" y="756" fill="#2C739F" font-size="17" font-weight="800" text-anchor="middle" >05</text>
+<text x="499" y="758" fill="#193755" font-size="24" font-weight="800" >视频模式调度</text>
+<rect x="447" y="795" width="281" height="117" rx="15" fill="#F2F7FC" stroke="#DBE7F2" stroke-width="1.5" />
+<text x="587" y="826" fill="#3B6383" font-size="19" font-weight="740" text-anchor="middle" >视频分流 / 模式选择</text>
+<rect x="466" y="844" width="28" height="29" rx="5" fill="#E7DDFC" stroke="none" stroke-width="1" />
+<rect x="474" y="852" width="12" height="12" rx="2" fill="#886BCA" stroke="none" stroke-width="1" />
+<rect x="501" y="844" width="28" height="29" rx="5" fill="#D5EEE5" stroke="none" stroke-width="1" />
+<path d="M506 864 L513 857 L520 862 L525 853" fill="none" stroke="#229F87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="536" y="844" width="28" height="29" rx="5" fill="#D5EEE5" stroke="none" stroke-width="1" />
+<path d="M541 864 L548 857 L555 862 L560 853" fill="none" stroke="#229F87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="571" y="844" width="28" height="29" rx="5" fill="#D5EEE5" stroke="none" stroke-width="1" />
+<path d="M576 864 L583 857 L590 862 L595 853" fill="none" stroke="#229F87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="606" y="844" width="28" height="29" rx="5" fill="#D5EEE5" stroke="none" stroke-width="1" />
+<path d="M611 864 L618 857 L625 862 L630 853" fill="none" stroke="#229F87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="641" y="844" width="28" height="29" rx="5" fill="#E7DDFC" stroke="none" stroke-width="1" />
+<rect x="649" y="852" width="12" height="12" rx="2" fill="#886BCA" stroke="none" stroke-width="1" />
+<rect x="676" y="844" width="28" height="29" rx="5" fill="#D5EEE5" stroke="none" stroke-width="1" />
+<path d="M681 864 L688 857 L695 862 L700 853" fill="none" stroke="#229F87" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="449" y="938" width="277" height="36" rx="13" fill="#E2F8EF" stroke="none" stroke-width="1" />
+<text x="587.5" y="961.25" fill="#068E76" font-size="15" font-weight="700" text-anchor="middle" >多数视频样本 → 模拟传输</text>
+<rect x="449" y="987" width="277" height="36" rx="13" fill="#EFEAFB" stroke="none" stroke-width="1" />
+<text x="587.5" y="1010.25" fill="#7255BB" font-size="15" font-weight="700" text-anchor="middle" >少量关键数据 → 数字传输</text>
+<text x="449" y="1063" fill="#71889C" font-size="16" font-weight="620" >两种传输模式在时域交替</text>
+<rect x="793" y="711" width="335" height="179" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="809" y="730" width="40" height="32" rx="10" fill="#DCF8EF" stroke="none" stroke-width="1" />
+<text x="829" y="753" fill="#008A73" font-size="17" font-weight="800" text-anchor="middle" >A</text>
+<text x="865" y="755" fill="#193755" font-size="24" font-weight="800" >模拟视频 / DAC</text>
+<rect x="812" y="780" width="297" height="65" rx="12" fill="#F1FCF8" stroke="#CFEAE1" stroke-width="1" />
+<path d="M828 829 H853 V803 H878 V818 H905 V795 H930 V814 H955 V827 H983 V802 H1010 V817 H1040" fill="none" stroke="#17AA8C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M831 831 C857 813 872 810 891 814 S926 799 947 810 S975 824 996 815 S1021 806 1041 811" fill="none" stroke="#3A9BCD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<text x="815" y="874" fill="#088976" font-size="16" font-weight="700" >DAC ON：模拟电压驱动变容管</text>
+<rect x="1025" y="753" width="82" height="28" rx="13" fill="#FFEDF0" stroke="none" stroke-width="1" />
+<text x="1066.0" y="771.2" fill="#BA5360" font-size="12" font-weight="700" text-anchor="middle" >数字态 OFF</text>
+<rect x="1169" y="711" width="335" height="179" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="1186" y="730" width="40" height="32" rx="10" fill="#EFE9FD" stroke="none" stroke-width="1" />
+<text x="1206" y="753" fill="#7050B9" font-size="17" font-weight="800" text-anchor="middle" >B</text>
+<text x="1242" y="755" fill="#193755" font-size="24" font-weight="800" >移频时钟 fshift</text>
+<rect x="1190" y="780" width="293" height="65" rx="12" fill="#F7F3FF" stroke="#E4DBF8" stroke-width="1" />
+<path d="M1207 833 V791 H1245 V833 H1284 V791 H1323 V833 H1362 V791 H1401 V833 H1455" fill="none" stroke="#8468D4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<text x="1195" y="872" fill="#7256BD" font-size="15" font-weight="700" >周期信号送入数字开关控制逻辑</text>
+<rect x="793" y="914" width="335" height="184" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="809" y="932" width="40" height="32" rx="10" fill="#EFE9FD" stroke="none" stroke-width="1" />
+<text x="829" y="955" fill="#7050B9" font-size="17" font-weight="800" text-anchor="middle" >C</text>
+<text x="865" y="957" fill="#193755" font-size="24" font-weight="800" >少量数字数据</text>
+<rect x="812" y="986" width="295" height="63" rx="12" fill="#F7F3FF" stroke="#E4DBF8" stroke-width="1" />
+<rect x="829" y="1003" width="14" height="31" rx="3" fill="#8062D5" stroke="none" stroke-width="1" />
+<rect x="850" y="1003" width="14" height="31" rx="3" fill="#C8B8ED" stroke="none" stroke-width="1" />
+<rect x="871" y="1003" width="14" height="31" rx="3" fill="#8062D5" stroke="none" stroke-width="1" />
+<rect x="892" y="1003" width="14" height="31" rx="3" fill="#8062D5" stroke="none" stroke-width="1" />
+<rect x="913" y="1003" width="14" height="31" rx="3" fill="#C8B8ED" stroke="none" stroke-width="1" />
+<rect x="934" y="1003" width="14" height="31" rx="3" fill="#8062D5" stroke="none" stroke-width="1" />
+<rect x="955" y="1003" width="14" height="31" rx="3" fill="#C8B8ED" stroke="none" stroke-width="1" />
+<rect x="976" y="1003" width="14" height="31" rx="3" fill="#C8B8ED" stroke="none" stroke-width="1" />
+<rect x="997" y="1003" width="14" height="31" rx="3" fill="#8062D5" stroke="none" stroke-width="1" />
+<rect x="1018" y="1003" width="14" height="31" rx="3" fill="#C8B8ED" stroke="none" stroke-width="1" />
+<rect x="1039" y="1003" width="14" height="31" rx="3" fill="#8062D5" stroke="none" stroke-width="1" />
+<rect x="1060" y="1003" width="14" height="31" rx="3" fill="#C8B8ED" stroke="none" stroke-width="1" />
+<text x="817" y="1073" fill="#765BB8" font-size="15" font-weight="700" >关键帧 / 重要数据 → 数字码元</text>
+<rect x="1169" y="914" width="335" height="184" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="1186" y="932" width="40" height="32" rx="10" fill="#EFE9FD" stroke="none" stroke-width="1" />
+<text x="1206" y="955" fill="#7050B9" font-size="17" font-weight="800" text-anchor="middle" >D</text>
+<text x="1242" y="957" fill="#193755" font-size="24" font-weight="800" >数字移频控制</text>
+<rect x="1190" y="984" width="292" height="66" rx="12" fill="#F7F3FF" stroke="#E4DBF8" stroke-width="1" />
+<text x="1334" y="1009" fill="#624BAA" font-size="18" font-weight="740" text-anchor="middle" >码元控制 + fshift</text>
+<path d="M1209 1032 H1225 V1018 H1241 V1032 H1276 V1018 H1301 V1032 H1335 V1018 H1365 V1032 H1396 V1018 H1455" fill="none" stroke="#8468D4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<text x="1192" y="1073" fill="#765BB8" font-size="15" font-weight="700" >RF 开关切换负载 → 移频边带</text>
+<rect x="1557" y="711" width="478" height="387" rx="24" fill="#FFFFFF" stroke="#D7E4F0" stroke-width="1.7" filter="url(#shadow)"/>
+<rect x="1576" y="731" width="40" height="32" rx="10" fill="#FEF0DB" stroke="none" stroke-width="1" />
+<text x="1596" y="754" fill="#A36A2A" font-size="17" font-weight="800" text-anchor="middle" >06</text>
+<text x="1632" y="756" fill="#193755" font-size="24" font-weight="800" >模拟 / 数字频带隔离</text>
+<text x="1583" y="798" fill="#526F88" font-size="17" font-weight="680" >反向散射信号频谱（正偏移侧示意）</text>
+<rect x="1586" y="820" width="420" height="177" rx="12" fill="#F9FBFE" stroke="#E0E9F2" stroke-width="1" />
+<path d="M1606 957 L1983 957" fill="none" stroke="#57708A" stroke-width="2.3" stroke-linecap="round" />
+<path d="M1978 953 L1984 957 L1978 961" fill="none" stroke="#57708A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<text x="1981" y="986" fill="#5A7188" font-size="16" font-weight="650" text-anchor="middle" >f</text>
+<path d="M1628 956 C1640 950 1652 921 1667 879 C1681 843 1696 856 1706 885 C1720 927 1732 950 1745 956 Z" fill="#5ECDB6" stroke="#159D86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill-opacity=".72"/>
+<path d="M1842 956 C1855 944 1872 893 1887 870 C1899 852 1913 866 1922 889 C1938 929 1950 947 1966 956 Z" fill="#AC94ED" stroke="#805FD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill-opacity=".72"/>
+<path d="M1687 864 L1687 960" fill="none" stroke="#16A88D" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="4 5" />
+<path d="M1903 867 L1903 960" fill="none" stroke="#8062D5" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="4 5" />
+<text x="1685" y="984" fill="#119881" font-size="17" font-weight="800" text-anchor="middle" >f0</text>
+<text x="1903" y="984" fill="#765ABF" font-size="17" font-weight="800" text-anchor="middle" >f0 + fshift</text>
+<rect x="1591" y="1013" width="201" height="32" rx="13" fill="#E2F8F0" stroke="none" stroke-width="1" />
+<text x="1691.5" y="1034.25" fill="#118F7E" font-size="15" font-weight="700" text-anchor="middle" >模拟频带：近载波</text>
+<rect x="1802" y="1013" width="204" height="32" rx="13" fill="#F0EBFC" stroke="none" stroke-width="1" />
+<text x="1904.0" y="1034.25" fill="#7558B9" font-size="15" font-weight="700" text-anchor="middle" >数字频带：移频后</text>
+<text x="1586" y="1071" fill="#71889C" font-size="14" font-weight="590" >频带互不重叠；另一侧边带及谐波未绘出</text>
+<rect x="75" y="1133" width="1960" height="190" rx="19" fill="#FFFFFF" stroke="#D6E4F1" stroke-width="1.8" />
+<rect x="76" y="1133" width="1958" height="45" rx="19" fill="#EBF3FB" stroke="none" stroke-width="1" />
+<rect x="76" y="1160" width="1958" height="18" rx="0" fill="#EBF3FB" stroke="none" stroke-width="1" />
+<text x="105" y="1165" fill="#365979" font-size="18" font-weight="800" >工作模式</text>
+<text x="350" y="1165" fill="#365979" font-size="18" font-weight="800" >承载的视频内容</text>
+<text x="801" y="1165" fill="#365979" font-size="18" font-weight="800" >DAC / 变容二极管</text>
+<text x="1290" y="1165" fill="#365979" font-size="18" font-weight="800" >RF 开关</text>
+<text x="1700" y="1165" fill="#365979" font-size="18" font-weight="800" >工作频带</text>
+<path d="M95 1249 L2017 1249" fill="none" stroke="#E2EAF2" stroke-width="1.7" stroke-linecap="round" />
+<rect x="102" y="1197" width="160" height="36" rx="13" fill="#DCF8EF" stroke="none" stroke-width="1" />
+<text x="182.0" y="1220.95" fill="#088976" font-size="17" font-weight="700" text-anchor="middle" >模拟传输</text>
+<text x="349" y="1222" fill="#294964" font-size="18" font-weight="650" >大部分视频样本 / 非关键帧</text>
+<text x="801" y="1209" fill="#088976" font-size="18" font-weight="750" >DAC 工作</text>
+<text x="801" y="1234" fill="#688199" font-size="15" font-weight="500" >结电容随模拟电压变化</text>
+<text x="1290" y="1220" fill="#3A617F" font-size="18" font-weight="680" >保持静态（不移频）</text>
+<text x="1700" y="1220" fill="#088976" font-size="18" font-weight="740" >载波邻近频带 f0</text>
+<rect x="102" y="1264" width="160" height="36" rx="13" fill="#EFE9FD" stroke="none" stroke-width="1" />
+<text x="182.0" y="1287.95" fill="#7151C2" font-size="17" font-weight="700" text-anchor="middle" >数字传输</text>
+<text x="349" y="1289" fill="#294964" font-size="18" font-weight="650" >少量关键帧 / 重要数据</text>
+<text x="801" y="1276" fill="#B44A61" font-size="18" font-weight="750" >DAC 关闭 / 不输出模拟波形</text>
+<text x="801" y="1302" fill="#688199" font-size="15" font-weight="500" >变容二极管维持固定偏置</text>
+<text x="1290" y="1289" fill="#7151C2" font-size="17" font-weight="730" >受数字码元控制，按 fshift 切换</text>
+<text x="1700" y="1289" fill="#7151C2" font-size="18" font-weight="740" >f0 ± fshift 附近</text>
+<path d="M78 1352 L2026 1352" fill="none" stroke="#D5E3EF" stroke-width="1.7" stroke-linecap="round" />
+<text x="82" y="1379" fill="#7C90A5" font-size="14" font-weight="540" >注：功能性系统框图；实际变容二极管偏置保持、RF 隔离、阻抗匹配、开关谐波抑制及频带规划应根据具体电路设计。</text>
+<text x="2021" y="1379" fill="#96A8B9" font-size="14" font-weight="680" text-anchor="end" >HYBRID ANALOG / DIGITAL BACKSCATTER</text>
+</svg>
 <figcaption>图1：单节点混合视频反向散射链路，数字时隙 DAC 关闭且 Varactor 维持固定偏置。</figcaption>
 </figure>
 <p><em>图1：单节点混合视频反向散射。模拟模式由 DAC 控制 Varactor，数字模式 DAC 关闭且 Varactor 保持确定偏置，两类信号异频。</em></p>
@@ -547,7 +819,144 @@ kHz 的基带边缘对应约 20 kHz 的 RF 总带宽量级。因此把 20 kHz/no
 B_{\mathrm{analog}}=10\times24=240\ \mathrm{kHz}
 </annotation></semantics></math></p>
 <figure>
-<img src="figures/fig02_multinode_tdm_fdma.svg" alt="图3：多节点数字 TDMA 与模拟 FDMA 共存方案" loading="lazy" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 940" role="img" aria-label="多节点数字同频分时与模拟异频分频共享接收机示意图">
+<title>多节点混合视频反向散射：数字 TDMA + 模拟 FDMA</title>
+<defs><marker id="arr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#31445e"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif}</style>
+<rect width="1600" height="940" fill="#ffffff"/>
+<rect x="27" y="19" width="1545" height="87" rx="18" fill="#1d457e"/>
+<text x="800" y="74" font-size="35" fill="#fff" font-weight="750" text-anchor="middle">多节点混合视频反向散射系统：数字同频分时 + 模拟异频分频</text>
+<rect x="31" y="235" width="195" height="230" rx="22" fill="#eaf4ff" stroke="#356db3" stroke-width="2.5"/>
+<text x="128" y="291" font-size="24" fill="#20467c" font-weight="750" text-anchor="middle">单载波激励源</text>
+<text x="128" y="329" font-size="24" fill="#2764a7" font-weight="650" text-anchor="middle">CW：f₀</text>
+<path d="M112 414 L127 356 L143 414 M99 414H157 M111 368 Q85 382 110 399 M144 368 Q170 382 144 399" fill="none" stroke="#2775c9" stroke-width="5"/>
+<path d="M226 356 H267 V220 H307" fill="none" stroke="#316bc1" stroke-width="4.5" marker-end="url(#arr)"/>
+<path d="M267 356 V381 H307" fill="none" stroke="#316bc1" stroke-width="4.5" marker-end="url(#arr)"/>
+<path d="M267 381 V543 H307" fill="none" stroke="#316bc1" stroke-width="4.5" marker-end="url(#arr)"/>
+<text x="266" y="191" font-size="19" fill="#316bc1" font-weight="700" text-anchor="middle">共同激励</text>
+<rect x="307" y="143" width="694" height="145" rx="18" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<rect x="320" y="123" width="125" height="43" rx="10" fill="#3863b9" stroke="#3863b9" stroke-width="2.5"/>
+<text x="382" y="152" font-size="24" fill="#fff" font-weight="750" text-anchor="middle">节点 1</text>
+<rect x="326" y="186" width="126" height="77" rx="10" fill="#fff" stroke="#a9bdcc" stroke-width="2.5"/>
+<circle cx="358" cy="215" r="22" fill="#203f5c"/><circle cx="358" cy="215" r="12" fill="#a6d7ff"/>
+<text x="405" y="220" font-size="18" fill="#172e4c" font-weight="500" text-anchor="middle">摄像头</text>
+<path d="M452 225H477" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="477" y="185" width="144" height="82" rx="10" fill="#e4efff" stroke="#84aaca" stroke-width="2.5"/>
+<text x="549" y="220" font-size="20" fill="#163c68" font-weight="650" text-anchor="middle">本地控制</text>
+<text x="549" y="249" font-size="17" fill="#38638c" font-weight="500" text-anchor="middle">分配模式</text>
+<path d="M621 225H649" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="649" y="171" width="296" height="109" rx="10" fill="#fff" stroke="#b0bfd1" stroke-width="2.5"/>
+<rect x="662" y="184" width="267" height="35" rx="7" fill="#f2eafd" stroke="#8963ce" stroke-width="2.5"/>
+<text x="796" y="208" font-size="18" fill="#6d48b6" font-weight="700" text-anchor="middle">少量数字 Key（TDM）</text>
+<rect x="662" y="228" width="267" height="35" rx="7" fill="#e9f9e8" stroke="#67ab71" stroke-width="2.5"/>
+<text x="796" y="253" font-size="18" fill="#2b854b" font-weight="700" text-anchor="middle">模拟视频：子带 fA1</text>
+<path d="M946 223H982" fill="none" stroke="#4b6d8c" stroke-width="2.5" />
+<path d="M977 196v54 m-14 -44 l14 -15 l14 15" fill="none" stroke="#34506b" stroke-width="3"/>
+<path d="M1001 219 Q1047 219,1094 382" fill="none" stroke="#dd7a25" stroke-width="4" marker-end="url(#arr)"/>
+<rect x="307" y="305" width="694" height="145" rx="18" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<rect x="320" y="285" width="125" height="43" rx="10" fill="#d28232" stroke="#d28232" stroke-width="2.5"/>
+<text x="382" y="314" font-size="24" fill="#fff" font-weight="750" text-anchor="middle">节点 2</text>
+<rect x="326" y="348" width="126" height="77" rx="10" fill="#fff" stroke="#a9bdcc" stroke-width="2.5"/>
+<circle cx="358" cy="377" r="22" fill="#203f5c"/><circle cx="358" cy="377" r="12" fill="#a6d7ff"/>
+<text x="405" y="382" font-size="18" fill="#172e4c" font-weight="500" text-anchor="middle">摄像头</text>
+<path d="M452 387H477" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="477" y="347" width="144" height="82" rx="10" fill="#e4efff" stroke="#84aaca" stroke-width="2.5"/>
+<text x="549" y="382" font-size="20" fill="#163c68" font-weight="650" text-anchor="middle">本地控制</text>
+<text x="549" y="411" font-size="17" fill="#38638c" font-weight="500" text-anchor="middle">分配模式</text>
+<path d="M621 387H649" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="649" y="333" width="296" height="109" rx="10" fill="#fff" stroke="#b0bfd1" stroke-width="2.5"/>
+<rect x="662" y="346" width="267" height="35" rx="7" fill="#f2eafd" stroke="#8963ce" stroke-width="2.5"/>
+<text x="796" y="370" font-size="18" fill="#6d48b6" font-weight="700" text-anchor="middle">少量数字 Key（TDM）</text>
+<rect x="662" y="390" width="267" height="35" rx="7" fill="#e9f9e8" stroke="#67ab71" stroke-width="2.5"/>
+<text x="796" y="415" font-size="18" fill="#2b854b" font-weight="700" text-anchor="middle">模拟视频：子带 fA2</text>
+<path d="M946 385H982" fill="none" stroke="#4b6d8c" stroke-width="2.5" />
+<path d="M977 358v54 m-14 -44 l14 -15 l14 15" fill="none" stroke="#34506b" stroke-width="3"/>
+<path d="M1001 381 Q1047 381,1094 382" fill="none" stroke="#dd7a25" stroke-width="4" marker-end="url(#arr)"/>
+<rect x="307" y="467" width="694" height="145" rx="18" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<rect x="320" y="447" width="125" height="43" rx="10" fill="#348c5f" stroke="#348c5f" stroke-width="2.5"/>
+<text x="382" y="476" font-size="24" fill="#fff" font-weight="750" text-anchor="middle">节点 3</text>
+<rect x="326" y="510" width="126" height="77" rx="10" fill="#fff" stroke="#a9bdcc" stroke-width="2.5"/>
+<circle cx="358" cy="539" r="22" fill="#203f5c"/><circle cx="358" cy="539" r="12" fill="#a6d7ff"/>
+<text x="405" y="544" font-size="18" fill="#172e4c" font-weight="500" text-anchor="middle">摄像头</text>
+<path d="M452 549H477" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="477" y="509" width="144" height="82" rx="10" fill="#e4efff" stroke="#84aaca" stroke-width="2.5"/>
+<text x="549" y="544" font-size="20" fill="#163c68" font-weight="650" text-anchor="middle">本地控制</text>
+<text x="549" y="573" font-size="17" fill="#38638c" font-weight="500" text-anchor="middle">分配模式</text>
+<path d="M621 549H649" fill="none" stroke="#213b58" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="649" y="495" width="296" height="109" rx="10" fill="#fff" stroke="#b0bfd1" stroke-width="2.5"/>
+<rect x="662" y="508" width="267" height="35" rx="7" fill="#f2eafd" stroke="#8963ce" stroke-width="2.5"/>
+<text x="796" y="532" font-size="18" fill="#6d48b6" font-weight="700" text-anchor="middle">少量数字 Key（TDM）</text>
+<rect x="662" y="552" width="267" height="35" rx="7" fill="#e9f9e8" stroke="#67ab71" stroke-width="2.5"/>
+<text x="796" y="577" font-size="18" fill="#2b854b" font-weight="700" text-anchor="middle">模拟视频：子带 fA3</text>
+<path d="M946 547H982" fill="none" stroke="#4b6d8c" stroke-width="2.5" />
+<path d="M977 520v54 m-14 -44 l14 -15 l14 15" fill="none" stroke="#34506b" stroke-width="3"/>
+<path d="M1001 543 Q1047 543,1094 382" fill="none" stroke="#dd7a25" stroke-width="4" marker-end="url(#arr)"/>
+<rect x="1098" y="139" width="473" height="479" rx="22" fill="#f0f7ff" stroke="#244b80" stroke-width="2.5"/>
+<rect x="1190" y="117" width="289" height="49" rx="12" fill="#1d457e" stroke="#1d457e" stroke-width="2.5"/>
+<text x="1334" y="151" font-size="27" fill="#fff" font-weight="750" text-anchor="middle">共享接收机</text>
+<rect x="1125" y="194" width="420" height="65" rx="11" fill="#e1eeff" stroke="#89accb" stroke-width="2.5"/>
+<text x="1335" y="232" font-size="21" fill="#18416c" font-weight="700" text-anchor="middle">统一 RF 接收与数字化</text>
+<path d="M1335 259V280 H1220V295" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<path d="M1335 280H1463V295" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<rect x="1122" y="295" width="210" height="95" rx="10" fill="#efe4ff" stroke="#8e67c8" stroke-width="2.5"/>
+<text x="1227" y="333" font-size="19" fill="#61389f" font-weight="750" text-anchor="middle">数字 TDM 支路</text>
+<text x="1227" y="367" font-size="17" fill="#61389f" font-weight="500" text-anchor="middle">按时隙恢复 Key</text>
+<rect x="1354" y="295" width="194" height="95" rx="10" fill="#e2f6e4" stroke="#5dad78" stroke-width="2.5"/>
+<text x="1451" y="333" font-size="19" fill="#247446" font-weight="750" text-anchor="middle">模拟 FDM 支路</text>
+<text x="1451" y="367" font-size="17" fill="#247446" font-weight="500" text-anchor="middle">按子带解调</text>
+<path d="M1227 390V417H1335V443" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<path d="M1451 390V417H1335" fill="none" stroke="#263c59" stroke-width="2.8" />
+<rect x="1217" y="443" width="235" height="55" rx="10" fill="#fff" stroke="#7c99bd" stroke-width="2.5"/>
+<text x="1335" y="478" font-size="20" fill="#1b4877" font-weight="700" text-anchor="middle">联合视频重建 / 播放</text>
+<path d="M1335 498V511" fill="none" stroke="#263c59" stroke-width="2.8" marker-end="url(#arr)"/>
+<rect x="1185" y="516" width="301" height="78" rx="9" fill="#132a42" stroke="#0b2342" stroke-width="2.5"/>
+<rect x="1197" y="529" width="87" height="51" rx="4" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<text x="1240" y="552" font-size="17" fill="#3863b9" font-weight="750" text-anchor="middle">节点 1</text>
+<rect x="1292" y="529" width="87" height="51" rx="4" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<text x="1335" y="552" font-size="17" fill="#d28232" font-weight="750" text-anchor="middle">节点 2</text>
+<rect x="1387" y="529" width="87" height="51" rx="4" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<text x="1430" y="552" font-size="17" fill="#348c5f" font-weight="750" text-anchor="middle">节点 3</text>
+<text x="1335" y="612" font-size="16" fill="#456079" font-weight="500" text-anchor="middle">同一个接收机接收三个不同节点</text>
+<rect x="29" y="642" width="740" height="273" rx="19" fill="#fff" stroke="#8e6bc5" stroke-width="2.5"/>
+<rect x="29" y="642" width="740" height="49" rx="13" fill="#7548b4" stroke="#7548b4" stroke-width="2.5"/>
+<text x="398" y="674" font-size="25" fill="#fff" font-weight="750" text-anchor="middle">数字：共享同一频带，按时间片发送（TDM）</text>
+<text x="181" y="733" font-size="20" fill="#6840a1" font-weight="700" text-anchor="middle">数字共享频带 fD</text>
+<path d="M81 841H717" fill="none" stroke="#3b4d66" stroke-width="2.5" marker-end="url(#arr)"/>
+<rect x="172" y="778" width="52" height="62" rx="4" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<text x="198" y="769" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">N1</text>
+<rect x="256" y="778" width="52" height="62" rx="4" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<text x="282" y="769" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">N2</text>
+<rect x="340" y="778" width="52" height="62" rx="4" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<text x="366" y="769" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">N3</text>
+<rect x="424" y="778" width="52" height="62" rx="4" fill="#eef2ff" stroke="#3863b9" stroke-width="2.5"/>
+<text x="450" y="769" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">N1</text>
+<rect x="508" y="778" width="52" height="62" rx="4" fill="#fff2e7" stroke="#d28232" stroke-width="2.5"/>
+<text x="534" y="769" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">N2</text>
+<rect x="592" y="778" width="52" height="62" rx="4" fill="#e8f7ed" stroke="#348c5f" stroke-width="2.5"/>
+<text x="618" y="769" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">N3</text>
+<text x="690" y="878" font-size="17" fill="#172e4c" font-weight="500" text-anchor="middle">时间 t</text>
+<text x="398" y="905" font-size="18" fill="#75529e" font-weight="600" text-anchor="middle">数字突发较短：N1 → N2 → N3 依次使用同一数字频带</text>
+<rect x="790" y="642" width="779" height="273" rx="19" fill="#fff" stroke="#57a379" stroke-width="2.5"/>
+<rect x="790" y="642" width="779" height="49" rx="13" fill="#288a59" stroke="#288a59" stroke-width="2.5"/>
+<text x="1179" y="674" font-size="25" fill="#fff" font-weight="750" text-anchor="middle">模拟：各占一个窄子带，频分复用（FDM）</text>
+<path d="M833 841H1514" fill="none" stroke="#3b4d66" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M861 840 Q879 833 891 774 Q897 749 903 774 Q915 833 933 840Z" fill="#eef2ff" stroke="#3863b9" stroke-width="3"/>
+<text x="897" y="765" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">N1</text>
+<text x="897" y="867" font-size="18" fill="#3863b9" font-weight="700" text-anchor="middle">fA1</text>
+<path d="M976 840 Q994 833 1006 774 Q1012 749 1018 774 Q1030 833 1048 840Z" fill="#fff2e7" stroke="#d28232" stroke-width="3"/>
+<text x="1012" y="765" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">N2</text>
+<text x="1012" y="867" font-size="18" fill="#d28232" font-weight="700" text-anchor="middle">fA2</text>
+<path d="M1091 840 Q1109 833 1121 774 Q1127 749 1133 774 Q1145 833 1163 840Z" fill="#e8f7ed" stroke="#348c5f" stroke-width="3"/>
+<text x="1127" y="765" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">N3</text>
+<text x="1127" y="867" font-size="18" fill="#348c5f" font-weight="700" text-anchor="middle">fA3</text>
+<rect x="1260" y="760" width="38" height="79" rx="4" fill="#edf0f5" stroke="#98a9b9" stroke-width="2.5"/>
+<text x="1279" y="747" font-size="15" fill="#607287" font-weight="500" text-anchor="middle">保护带</text>
+<rect x="1336" y="773" width="163" height="65" rx="7" fill="#ece4ff" stroke="#9370c3" stroke-width="2.5"/>
+<text x="1418" y="799" font-size="19" fill="#6941ae" font-weight="700" text-anchor="middle">数字频带 fD</text>
+<text x="1418" y="827" font-size="17" fill="#6941ae" font-weight="500" text-anchor="middle">共频、分时</text>
+<text x="1495" y="876" font-size="17" fill="#172e4c" font-weight="500" text-anchor="middle">频率 f</text>
+<text x="1179" y="905" font-size="18" fill="#2c8357" font-weight="600" text-anchor="middle">模拟、数字占不同频带；多个模拟子带可同时工作</text>
+</svg>
 <figcaption>图3：多节点数字 TDMA + 模拟 FDMA 示意：不同节点，共享激励源和接收机；数字同频分时，模拟异频分频。</figcaption>
 </figure>
 <p><em>图3：3 节点系统架构示意；频谱预算仍按下文 10 节点计算。本图不代表多节点实测。</em></p><p>数字 Key 在所有节点共享的数字频带上以 TDMA 轮流发送；模拟视频在另一频带中使用节点专属的窄 FDMA 子带。发送数字 Key 的节点在对应时隙关闭 DAC、维持 Varactor 确定偏置并暂停本节点模拟支路；其他节点可继续使用各自模拟子带。所有信号由同一个接收机集中解调和重建。</p>
@@ -803,7 +1212,160 @@ Warp</h2>
 <code>models.py</code> 的 <code>ReferenceWarpNet</code>，模型入口为
 <code>warp</code>。</p>
 <figure class="referencewarp-editable-svg">
-<img src="figures/fig07_referencewarp_architecture.svg" alt="图6：ReferenceWarpNet / Warp 的多尺度参考帧对齐与置信度融合网络" loading="lazy" />
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1060" viewBox="0 0 2100 1060" role="img" aria-labelledby="title desc"><title id="title">ReferenceWarpNet：参考帧辅助视频恢复网络结构</title><desc id="desc">两个干净的参考关键帧通过共享权重的 Key Encoder，当前退化非关键帧经过 Observation Encoder；在四分之一和八分之一尺度进行流场及偏移预测，然后使用 grid_sample 将两帧参考特征对齐到当前帧，Confidence Gate 加权并经 Fusion Decoder 预测残差，与当前退化图像相加得到恢复图像。所有形状、连接线及文字均为独立 SVG 矢量对象。</desc><defs>
+<marker id="n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62758e"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2f8b62"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2d68b7"/></marker>
+<marker id="v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#805ecb"/></marker>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#d28b38"/></marker>
+</defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif}</style><rect width="2100" height="1060" fill="#fff"/>
+<rect x="65" y="41" width="190" height="32" rx="16" fill="#ebf2fa" stroke="#ebf2fa" stroke-width="1"/>
+<text x="160" y="63" text-anchor="middle" font-size="16" font-weight="700" fill="#366196">NETWORK OVERVIEW</text>
+<text x="65" y="120" text-anchor="start" font-size="49" font-weight="760" fill="#142b4b">ReferenceWarpNet</text>
+<text x="625" y="120" text-anchor="start" font-size="35" font-weight="650" fill="#4f6682">参考关键帧辅助视频恢复网络</text>
+<text x="68" y="157" text-anchor="start" font-size="18" font-weight="450" fill="#72849b">Multi-scale alignment  /  Confidence-gated fusion  /  Residual reconstruction</text>
+<path d="M65 179 H2035" fill="none" stroke="#e4eaf2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="72" y="207" width="208" height="32" rx="16" fill="#f2f5f9" stroke="#f2f5f9" stroke-width="1"/>
+<text x="176" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#455b76">01  输入帧</text>
+<rect x="363" y="207" width="235" height="32" rx="16" fill="#eaf2ff" stroke="#eaf2ff" stroke-width="1"/>
+<text x="480.5" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#2862a7">02  特征编码</text>
+<rect x="706" y="207" width="367" height="32" rx="16" fill="#f4efff" stroke="#f4efff" stroke-width="1"/>
+<text x="889.5" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#734fc1">03  多尺度对齐</text>
+<rect x="1208" y="207" width="525" height="32" rx="16" fill="#fff4df" stroke="#fff4df" stroke-width="1"/>
+<text x="1470.5" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#977026">04  参考门控与融合</text>
+<rect x="1800" y="207" width="236" height="32" rx="16" fill="#edf4fb" stroke="#edf4fb" stroke-width="1"/>
+<text x="1918" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#42668b">05  重建输出</text>
+<rect x="63" y="263" width="228" height="531" rx="20" fill="#fafcff" stroke="#e8edf3" stroke-width="1.5"/>
+<rect x="339" y="263" width="278" height="531" rx="20" fill="#fafffd" stroke="#e4f1e8" stroke-width="1.5"/>
+<rect x="681" y="263" width="423" height="531" rx="20" fill="#fcfaff" stroke="#ece5fa" stroke-width="1.5"/>
+<rect x="1179" y="263" width="594" height="531" rx="20" fill="#fffdf9" stroke="#f2eadc" stroke-width="1.5"/>
+<rect x="1790" y="263" width="248" height="531" rx="20" fill="#fbfdff" stroke="#e8eef5" stroke-width="1.5"/>
+<rect x="84" y="256" width="185" height="143" rx="12" fill="#fff" stroke="#dce4ee" stroke-width="1.5"/>
+<text x="176" y="285" text-anchor="middle" font-size="19" font-weight="650" fill="#32465e">前一关键帧</text>
+<rect x="100" y="299" width="152" height="73" rx="5" fill="#e8edf2" stroke="#c7d0da" stroke-width="1"/>
+<path d="M102 356 L125 332 L144 344 L177 317 L204 349 L227 333 L251 359 V371 H102 Z" fill="none" stroke="#aebcc9" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102 356 L125 332 L144 344 L177 317 L204 349 L227 333 L251 359 V371 H102 Z" fill="#bcc8d3"/>
+<circle cx="224" cy="324" r="9" fill="#fff"/>
+<text x="176" y="392" text-anchor="middle" font-size="23" font-weight="700" fill="#273f5c">Kₜ₋₁</text>
+<rect x="84" y="456" width="185" height="143" rx="12" fill="#fff" stroke="#dce4ee" stroke-width="1.5"/>
+<text x="176" y="485" text-anchor="middle" font-size="19" font-weight="650" fill="#32465e">当前退化帧</text>
+<rect x="100" y="499" width="152" height="73" rx="5" fill="#e8edf2" stroke="#c7d0da" stroke-width="1"/>
+<path d="M102 556 L125 532 L144 544 L177 517 L204 549 L227 533 L251 559 V571 H102 Z" fill="none" stroke="#aebcc9" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102 556 L125 532 L144 544 L177 517 L204 549 L227 533 L251 559 V571 H102 Z" fill="#bcc8d3"/>
+<circle cx="224" cy="524" r="9" fill="#fff"/>
+<rect x="100" y="499" width="152" height="73" rx="5" fill="#8ea4bc" stroke="#8ea4bc" stroke-width="0"/>
+<rect x="100" y="499" width="152" height="73" rx="5" fill="#fff" opacity=".38"/>
+<text x="176" y="592" text-anchor="middle" font-size="23" font-weight="700" fill="#273f5c">Iₜ</text>
+<rect x="84" y="656" width="185" height="143" rx="12" fill="#fff" stroke="#dce4ee" stroke-width="1.5"/>
+<text x="176" y="685" text-anchor="middle" font-size="19" font-weight="650" fill="#32465e">后一关键帧</text>
+<rect x="100" y="699" width="152" height="73" rx="5" fill="#e8edf2" stroke="#c7d0da" stroke-width="1"/>
+<path d="M102 756 L125 732 L144 744 L177 717 L204 749 L227 733 L251 759 V771 H102 Z" fill="none" stroke="#aebcc9" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102 756 L125 732 L144 744 L177 717 L204 749 L227 733 L251 759 V771 H102 Z" fill="#bcc8d3"/>
+<circle cx="224" cy="724" r="9" fill="#fff"/>
+<text x="176" y="792" text-anchor="middle" font-size="23" font-weight="700" fill="#273f5c">Kₜ₊₁</text>
+<rect x="366" y="263" width="223" height="112" rx="15" fill="#e7f7ed" stroke="#a6d8bd" stroke-width="2"/>
+<rect x="369" y="266" width="7" height="106" rx="3" fill="#2f8b62" stroke="#2f8b62" stroke-width="0"/>
+<text x="478" y="308" text-anchor="middle" font-size="21" font-weight="730" fill="#235b42">Key Encoder</text>
+<text x="478" y="336" text-anchor="middle" font-size="17" font-weight="500" fill="#548971">多尺度 Key 特征</text>
+<rect x="408" y="345" width="137" height="32" rx="16" fill="#d1eadc" stroke="#d1eadc" stroke-width="1"/>
+<text x="476.5" y="367" text-anchor="middle" font-size="16" font-weight="700" fill="#2b7a54">共享权重 θK</text>
+<rect x="366" y="463" width="223" height="112" rx="15" fill="#eaf3ff" stroke="#9ac1ef" stroke-width="2"/>
+<rect x="369" y="466" width="7" height="106" rx="3" fill="#2d68b7" stroke="#2d68b7" stroke-width="0"/>
+<text x="478" y="508" text-anchor="middle" font-size="21" font-weight="730" fill="#25476f">Observation Encoder</text>
+<text x="478" y="536" text-anchor="middle" font-size="17" font-weight="500" fill="#587a9e">多尺度观测特征</text>
+<rect x="408" y="545" width="137" height="32" rx="16" fill="#d5e8fe" stroke="#d5e8fe" stroke-width="1"/>
+<text x="476.5" y="567" text-anchor="middle" font-size="16" font-weight="700" fill="#366fae">当前帧特征</text>
+<rect x="366" y="663" width="223" height="112" rx="15" fill="#e7f7ed" stroke="#a6d8bd" stroke-width="2"/>
+<rect x="369" y="666" width="7" height="106" rx="3" fill="#2f8b62" stroke="#2f8b62" stroke-width="0"/>
+<text x="478" y="708" text-anchor="middle" font-size="21" font-weight="730" fill="#235b42">Key Encoder</text>
+<text x="478" y="736" text-anchor="middle" font-size="17" font-weight="500" fill="#548971">多尺度 Key 特征</text>
+<rect x="408" y="745" width="137" height="32" rx="16" fill="#d1eadc" stroke="#d1eadc" stroke-width="1"/>
+<text x="476.5" y="767" text-anchor="middle" font-size="16" font-weight="700" fill="#2b7a54">共享权重 θK</text>
+<path d="M269 324 H357" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M269 524 H357" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M269 724 H357" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<rect x="709" y="264" width="355" height="122" rx="15" fill="#fff9ef" stroke="#e7cfa5" stroke-width="2.2"/>
+<text x="887" y="301" text-anchor="middle" font-size="22" font-weight="750" fill="#815516">Differentiable Warping</text>
+<text x="887" y="335" text-anchor="middle" font-size="20" font-weight="650" fill="#845b25">前一关键帧特征对齐</text>
+<path d="M755 347 H1018" fill="none" stroke="#e9d8bb" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="887" y="372" text-anchor="middle" font-size="17" font-weight="500" fill="#9b815d">grid_sample  ·  align to Iₜ</text>
+<rect x="709" y="657" width="355" height="122" rx="15" fill="#fff9ef" stroke="#e7cfa5" stroke-width="2.2"/>
+<text x="887" y="694" text-anchor="middle" font-size="22" font-weight="750" fill="#815516">Differentiable Warping</text>
+<text x="887" y="728" text-anchor="middle" font-size="20" font-weight="650" fill="#845b25">后一关键帧特征对齐</text>
+<path d="M755 740 H1018" fill="none" stroke="#e9d8bb" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="887" y="765" text-anchor="middle" font-size="17" font-weight="500" fill="#9b815d">grid_sample  ·  align to Iₜ</text>
+<rect x="709" y="446" width="355" height="156" rx="15" fill="#f4eeff" stroke="#d6c8f4" stroke-width="2.2"/>
+<text x="887" y="478" text-anchor="middle" font-size="23" font-weight="750" fill="#6842a7">Flow / Offset Estimation</text>
+<text x="887" y="500" text-anchor="middle" font-size="16" font-weight="450" fill="#8c76ac">基于观测与参考特征估计位移</text>
+<rect x="739" y="518" width="144" height="58" rx="11" fill="#fff" stroke="#c4b4eb" stroke-width="1.7"/>
+<text x="811" y="541" text-anchor="middle" font-size="19" font-weight="700" fill="#6744a0">1/4 scale</text>
+<text x="811" y="562" text-anchor="middle" font-size="15" font-weight="500" fill="#8671a1">Flow / Offset</text>
+<rect x="895" y="518" width="144" height="58" rx="11" fill="#fff" stroke="#c4b4eb" stroke-width="1.7"/>
+<text x="967" y="541" text-anchor="middle" font-size="19" font-weight="700" fill="#6744a0">1/8 scale</text>
+<text x="967" y="562" text-anchor="middle" font-size="15" font-weight="500" fill="#8671a1">Flow / Offset</text>
+<path d="M590 324 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M590 724 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M641 324 V481 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M641 724 V568 H701" fill="none" stroke="#2f8b62" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<path d="M590 524 H701" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<path d="M869 446 V392 H868 V386" fill="none" stroke="#805ecb" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<path d="M920 602 V648 H914 V657" fill="none" stroke="#805ecb" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<text x="1040" y="411" text-anchor="middle" font-size="14" font-weight="600" fill="#8566b5">1/4 · 1/8</text>
+<text x="1040" y="635" text-anchor="middle" font-size="14" font-weight="600" fill="#8566b5">1/4 · 1/8</text>
+<path d="M1064 326 H1139 V489 H1198" fill="none" stroke="#d28b38" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M1064 719 H1139 V548 H1198" fill="none" stroke="#d28b38" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<rect x="1206" y="441" width="230" height="167" rx="16" fill="#fff6e3" stroke="#efd59b" stroke-width="2.2"/>
+<rect x="1224" y="457" width="80" height="32" rx="16" fill="#ffe8b7" stroke="#ffe8b7" stroke-width="1"/>
+<text x="1264" y="479" text-anchor="middle" font-size="16" font-weight="700" fill="#9b7425">GATE</text>
+<text x="1321" y="518" text-anchor="middle" font-size="23" font-weight="750" fill="#785822">Confidence Gate</text>
+<text x="1321" y="551" text-anchor="middle" font-size="17" font-weight="500" fill="#987e55">局部参考可信度评估</text>
+<text x="1321" y="575" text-anchor="middle" font-size="16" font-weight="500" fill="#987e55">自适应加权 Key 特征</text>
+<rect x="1519" y="441" width="226" height="167" rx="16" fill="#fff0ef" stroke="#efbcbc" stroke-width="2.2"/>
+<rect x="1538" y="457" width="80" height="32" rx="16" fill="#ffe0de" stroke="#ffe0de" stroke-width="1"/>
+<text x="1578" y="479" text-anchor="middle" font-size="16" font-weight="700" fill="#af5757">FUSE</text>
+<text x="1632" y="518" text-anchor="middle" font-size="23" font-weight="750" fill="#9a3d44">Fusion Decoder</text>
+<text x="1632" y="551" text-anchor="middle" font-size="16" font-weight="500" fill="#b16e70">融合观测与对齐特征</text>
+<text x="1632" y="576" text-anchor="middle" font-size="16" font-weight="500" fill="#b16e70">预测当前帧残差 ΔIₜ</text>
+<path d="M1436 524 H1510" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M590 514 H668 V710" fill="none" stroke="#2d68b7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M668 710 Q684 724 668 739" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M668 710 Q684 724 668 739" fill="none" stroke="#2d68b7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M668 739 V822 H1634 V612" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<rect x="995" y="806" width="215" height="32" rx="16" fill="#e7f0ff" stroke="#e7f0ff" stroke-width="1"/>
+<text x="1102.5" y="828" text-anchor="middle" font-size="16" font-weight="700" fill="#2d68b7">Observation features</text>
+<rect x="1805" y="279" width="211" height="497" rx="17" fill="#fff" stroke="#dbe3ec" stroke-width="2"/>
+<text x="1910" y="316" text-anchor="middle" font-size="22" font-weight="750" fill="#28466b">Restoration</text>
+<path d="M1829 335 H1991" fill="none" stroke="#e3e9f1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1829" y="358" width="163" height="76" rx="11" fill="#f5f7fb" stroke="#d2dce8" stroke-width="1.4"/>
+<text x="1910" y="390" text-anchor="middle" font-size="20" font-weight="700" fill="#47627d">Residual</text>
+<text x="1910" y="414" text-anchor="middle" font-size="22" font-weight="750" fill="#48647d">ΔIₜ</text>
+<path d="M1745 524 H1780 V395 H1821" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<path d="M1910 434 V467" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<circle cx="1910" cy="496" r="27" fill="#eaf3ff" stroke="#9bb9df" stroke-width="2"/>
+<text x="1910" y="506" text-anchor="middle" font-size="31" font-weight="750" fill="#3168ac">+</text>
+<text x="1990" y="489" text-anchor="middle" font-size="19" font-weight="650" fill="#2d68b7">Iₜ</text>
+<path d="M1970 495 H1940" fill="none" stroke="#2d68b7" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<text x="1910" y="558" text-anchor="middle" font-size="21" font-weight="750" fill="#284c76">Îₜ = Iₜ + ΔIₜ</text>
+<path d="M1910 572 V603" fill="none" stroke="#62758e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#n)"/>
+<rect x="1833" y="606" width="155" height="92" rx="8" fill="#e8f2f5" stroke="#adbfce" stroke-width="1.5"/>
+<path d="M1835 675 L1859 648 L1877 659 L1912 625 L1938 658 L1960 645 L1986 674 V697 H1835 Z" fill="#a4bcc0"/>
+<circle cx="1963" cy="630" r="8" fill="#fff"/>
+<text x="1910" y="731" text-anchor="middle" font-size="18" font-weight="600" fill="#3c5874">恢复当前非关键帧</text>
+<text x="1910" y="758" text-anchor="middle" font-size="16" font-weight="500" fill="#7087a2">Restored No-Key</text>
+<rect x="65" y="861" width="1971" height="130" rx="17" fill="#f8fafc" stroke="#e8eef5" stroke-width="1.5"/>
+<text x="101" y="899" text-anchor="start" font-size="19" font-weight="720" fill="#34465c">数据流</text>
+<path d="M206 894 H281" fill="none" stroke="#2f8b62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#g)"/>
+<text x="296" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Key reference</text>
+<path d="M581 894 H656" fill="none" stroke="#2d68b7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#b)"/>
+<text x="671" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Observation</text>
+<path d="M938 894 H1013" fill="none" stroke="#805ecb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#v)"/>
+<text x="1028" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Flow / Offset</text>
+<path d="M1307 894 H1382" fill="none" stroke="#d28b38" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a)"/>
+<text x="1397" y="902" text-anchor="start" font-size="18" font-weight="550" fill="#526680">Warped features</text>
+<path d="M101 928 H1996" fill="none" stroke="#e5eaf1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="102" y="963" text-anchor="start" font-size="19" font-weight="430" fill="#617289">Key Encoder 两个实例共享参数 θK；1/4 和 1/8 尺度执行偏移估计及参考特征对齐；残差 ΔIₜ 与观测 Iₜ 相加得到恢复结果。</text>
+<text x="1037" y="1030" text-anchor="middle" font-size="16" font-weight="620" fill="#9ca9b8">FIGURE  •  REFERENCE-GUIDED MULTI-SCALE VIDEO RESTORATION</text>
+</svg>
 <figcaption aria-hidden="true">图6：ReferenceWarpNet / Warp 多尺度参考帧对齐与置信度门控融合网络（原生 SVG，可编辑）</figcaption>
 </figure>
 <p><em>图6：ReferenceWarpNet / Warp 的可编辑矢量网络结构示意。前后 Key Encoder 共享参数，1/4 和 1/8 尺度估计偏移并执行可微特征对齐，门控融合后预测残差并恢复当前非关键帧。</em></p>
